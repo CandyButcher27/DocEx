@@ -1,19 +1,36 @@
 The overall pipeline will look something like this : 
 
-PDF
-  ↓
-Image Loader
-  ↓
+PDF Loader
+    │
+    ▼
+Document
+    │
+    ▼
 Preprocessing
-  ↓
+    │
+    ▼
+Page
+    │
+    ▼
 Template Registration
-  ↓
+    │
+    ▼
+Template
+    │
+    ▼
 ROI Extraction
-  ↓
+    │
+    ▼
+Field
+    │
+    ▼
 OCR
-  ↓
+    │
+    ▼
+OCRResult
+    │
+    ▼
 Validation
-  ↓
-Confidence Scoring
-  ↓
-JSON/CSV
+    │
+    ▼
+ValidationResult
