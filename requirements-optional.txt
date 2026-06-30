@@ -1,0 +1,18 @@
+# Optional, heavy engines. Install only the ones you actually use.
+# Core pipeline runs without these (OCR_ENGINE=stub, VLM_PROVIDER=fake).
+
+# --- Real OCR engines (pick one) ---
+# tesseract: also needs the Tesseract-OCR binary installed on the system
+pytesseract==0.3.13
+# easyocr (pulls torch)
+easyocr==1.7.2
+# trocr handwriting (pulls torch + transformers)
+transformers==4.46.3
+torch==2.5.1
+# paddle
+paddleocr==2.9.1
+paddlepaddle==2.6.2
+
+# --- Real VLM providers (pick one) ---
+anthropic==0.40.0
+openai==1.57.0
