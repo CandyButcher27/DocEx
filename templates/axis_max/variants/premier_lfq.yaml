@@ -4,6 +4,7 @@ inherits: base.yaml
 
 metadata:
   variant: Premier
+  reference_docx: "reference/GCL Premier_LFQ 1.docx"
 
 overrides:
 
@@ -14,5 +15,9 @@ overrides:
     - id: payment_details
 
       add_fields:
-
-        - optional_atpd_sum_assured
+        - id: optional_atpd_sum_assured
+          label: Optional ATPD Sum Assured
+          datatype: number
+          widget: textbox
+          ocr: { engine: paddle }
+          validation: { validator: amount }

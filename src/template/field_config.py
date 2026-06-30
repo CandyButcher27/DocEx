@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from .enums import FieldType
+from .enums import FieldType, FieldWidget
 from .export_config import ExportConfig
 from .ocr_config import OCRConfig
 from .roi_config import ROIConfig
@@ -15,6 +15,8 @@ class FieldConfig:
     label: str
 
     datatype: FieldType
+
+    widget: FieldWidget
 
     roi: ROIConfig
 

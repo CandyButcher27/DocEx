@@ -3,7 +3,7 @@ import unittest
 from src.models.field import Field
 from src.models.ocr_result import OCRResult
 from src.models.validation_result import ValidationResult
-from src.template.enums import ExportFormat, FieldType, OCREngine, ValidatorType
+from src.template.enums import ExportFormat, FieldType, FieldWidget, OCREngine, ValidatorType
 from src.template.export_config import ExportConfig
 from src.template.field_config import FieldConfig
 from src.template.ocr_config import OCRConfig
@@ -18,6 +18,7 @@ class TestField(unittest.TestCase):
             id="pan_number",
             label="PAN Number",
             datatype=FieldType.PAN,
+            widget=FieldWidget.TEXTBOX,
             roi=ROIConfig(
                 x=0.1,
                 y=0.2,
@@ -40,6 +41,7 @@ class TestField(unittest.TestCase):
             id="customer_name",
             label="Customer Name",
             datatype=FieldType.TEXT,
+            widget=FieldWidget.TEXTBOX,
             roi=ROIConfig(
                 x=0.4,
                 y=0.2,

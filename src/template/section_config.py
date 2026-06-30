@@ -6,6 +6,10 @@ from .field_config import FieldConfig
 @dataclass(frozen=True, slots=True)
 class SectionConfig:
 
-    name: str
+    id: str
 
     fields: list[FieldConfig]
+
+    repeatable: bool = False
+
+    max_items: int | None = None

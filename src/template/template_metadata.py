@@ -13,6 +13,8 @@ class TemplateMetadata:
     variant: str
     version: str
     page_count: int
+    issuer: str
+    document_type: str
     description: str = ""
 
     def __post_init__(self) -> None:
@@ -31,6 +33,12 @@ class TemplateMetadata:
 
         if not self.version.strip():
             raise ValueError("version cannot be empty.")
+
+        if not self.issuer.strip():
+            raise ValueError("issuer cannot be empty.")
+
+        if not self.document_type.strip():
+            raise ValueError("document_type cannot be empty.")
 
         if self.page_count <= 0:
             raise ValueError("page_count must be greater than zero.")

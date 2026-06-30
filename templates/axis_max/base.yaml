@@ -7,6 +7,19 @@ inherits: null
 metadata:
   issuer: Axis Max Life Insurance
   document_type: Group Credit Life Member Enrolment Form
+  version: "1.0"
+  variant: Base
+
+registration:
+  method: orb
+  reference_images: {}
+
+preprocessing:
+  deskew: true
+  perspective_correction: true
+  adaptive_threshold: true
+  denoise: true
+  contrast_enhancement: true
 
 pages:
 
@@ -16,97 +29,478 @@ pages:
 
       - id: policy_details
         fields:
-          - group_policy_number
-          - group_policyholder_name
-          - customer_id
-          - loan_type
-          - loan_account_number
-          - first_loan_disbursement_date
-          - loan_amount
-          - product_name
+          - id: group_policy_number
+            label: Group Policy Number
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: group_policyholder_name
+            label: Group Policyholder Name
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: customer_id
+            label: Customer ID
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: loan_type
+            label: Loan Type
+            datatype: text
+            widget: dropdown
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: loan_account_number
+            label: Loan Account Number
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: account_number }
+
+          - id: first_loan_disbursement_date
+            label: First Loan Disbursement Date
+            datatype: date
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: date }
+
+          - id: loan_amount
+            label: Loan Amount
+            datatype: number
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: amount }
+
+          - id: product_name
+            label: Product Name
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
 
       - id: applicant_details
         fields:
-          - applicant_type
-          - share_in_loan
-          - insured_name
-          - dob
-          - gender
-          - abha_number
-          - nationality
-          - occupation
-          - education
-          - pan_number
-          - annual_income
+          - id: applicant_type
+            label: Applicant Type
+            datatype: text
+            widget: radio
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: share_in_loan
+            label: Share in Loan (%)
+            datatype: number
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: number }
+
+          - id: insured_name
+            label: Insured Name
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: dob
+            label: Date of Birth
+            datatype: date
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: date }
+
+          - id: gender
+            label: Gender
+            datatype: text
+            widget: radio
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: abha_number
+            label: ABHA Number
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: nationality
+            label: Nationality
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: occupation
+            label: Occupation
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: education
+            label: Education
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: pan_number
+            label: PAN Number
+            datatype: pan
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: pan }
+
+          - id: annual_income
+            label: Annual Income
+            datatype: number
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: amount }
 
       - id: payment_details
         fields:
-          - premium_financed
-          - premium_amount
-          - cheque_reference
-          - payee_bank
-          - period_of_insurance
-          - roi
-          - moratorium_applicable
-          - moratorium_period
-          - interest_payment_option
-          - cover_type
-          - base_sum_assured
+          - id: premium_financed
+            label: Premium Financed
+            datatype: checkbox
+            widget: checkbox
+            ocr: { engine: paddle }
+            validation: { validator: none }
+
+          - id: premium_amount
+            label: Premium Amount
+            datatype: number
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: amount }
+
+          - id: cheque_reference
+            label: Cheque Reference Number
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: payee_bank
+            label: Payee Bank
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: period_of_insurance
+            label: Period of Insurance
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: roi
+            label: Rate of Interest
+            datatype: number
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: number }
+
+          - id: moratorium_applicable
+            label: Moratorium Applicable
+            datatype: checkbox
+            widget: checkbox
+            ocr: { engine: paddle }
+            validation: { validator: none }
+
+          - id: moratorium_period
+            label: Moratorium Period
+            datatype: number
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: number }
+
+          - id: interest_payment_option
+            label: Interest Payment Option
+            datatype: text
+            widget: radio
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: cover_type
+            label: Cover Type
+            datatype: text
+            widget: radio
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: base_sum_assured
+            label: Base Sum Assured
+            datatype: number
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: amount }
 
       - id: rider_details
         fields:
-          - cia_rider_enabled
-          - cia_option
-          - rider_period
-          - rider_formula_percent
-          - rider_formula_max_amount
+          - id: cia_rider_enabled
+            label: CIA Rider Enabled
+            datatype: checkbox
+            widget: checkbox
+            ocr: { engine: paddle }
+            validation: { validator: none }
+
+          - id: cia_option
+            label: CIA Option
+            datatype: text
+            widget: radio
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: rider_period
+            label: Rider Period
+            datatype: number
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: number }
+
+          - id: rider_formula_percent
+            label: Rider Formula Percent
+            datatype: number
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: number }
+
+          - id: rider_formula_max_amount
+            label: Rider Formula Max Amount
+            datatype: number
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: amount }
 
       - id: communication
         fields:
-          - address
-          - landmark
-          - city
-          - state
-          - pin
-          - mobile
-          - landline
-          - email
+          - id: address
+            label: Address
+            datatype: address
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: landmark
+            label: Landmark
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: city
+            label: City
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: state
+            label: State
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: pin
+            label: PIN Code
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: pincode }
+
+          - id: mobile
+            label: Mobile Number
+            datatype: phone
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: phone }
+
+          - id: landline
+            label: Landline Number
+            datatype: phone
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: phone }
+
+          - id: email
+            label: Email
+            datatype: email
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: email }
 
       - id: proposer
         fields:
-          - proposer_name
-          - proposer_dob
-          - proposer_gender
-          - proposer_relationship
+          - id: proposer_name
+            label: Proposer Name
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: proposer_dob
+            label: Proposer Date of Birth
+            datatype: date
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: date }
+
+          - id: proposer_gender
+            label: Proposer Gender
+            datatype: text
+            widget: radio
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: proposer_relationship
+            label: Proposer Relationship
+            datatype: text
+            widget: dropdown
+            ocr: { engine: paddle }
+            validation: { validator: text }
 
       - id: nominee
         repeatable: true
         max_items: 2
         fields:
-          - nominee_name
-          - nominee_dob
-          - nominee_gender
-          - nominee_relationship
-          - nominee_share
-          - nominee_mobile
-          - nominee_email
-          - nominee_address
-          - nominee_account_number
-          - nominee_ifsc
+          - id: nominee_name
+            label: Nominee Name
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: nominee_dob
+            label: Nominee Date of Birth
+            datatype: date
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: date }
+
+          - id: nominee_gender
+            label: Nominee Gender
+            datatype: text
+            widget: radio
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: nominee_relationship
+            label: Nominee Relationship
+            datatype: text
+            widget: dropdown
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: nominee_share
+            label: Nominee Share (%)
+            datatype: number
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: number }
+
+          - id: nominee_mobile
+            label: Nominee Mobile Number
+            datatype: phone
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: phone }
+
+          - id: nominee_email
+            label: Nominee Email
+            datatype: email
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: email }
+
+          - id: nominee_address
+            label: Nominee Address
+            datatype: address
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: nominee_account_number
+            label: Nominee Account Number
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: account_number }
+
+          - id: nominee_ifsc
+            label: Nominee IFSC Code
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: ifsc }
 
       - id: appointee
         fields:
-          - appointee_name
-          - appointee_dob
-          - appointee_gender
-          - appointee_relationship
+          - id: appointee_name
+            label: Appointee Name
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text, required: false }
+
+          - id: appointee_dob
+            label: Appointee Date of Birth
+            datatype: date
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: date, required: false }
+
+          - id: appointee_gender
+            label: Appointee Gender
+            datatype: text
+            widget: radio
+            ocr: { engine: paddle }
+            validation: { validator: text, required: false }
+
+          - id: appointee_relationship
+            label: Appointee Relationship
+            datatype: text
+            widget: dropdown
+            ocr: { engine: paddle }
+            validation: { validator: text, required: false }
 
       - id: declaration_questions
         fields:
-          - height
-          - weight
-          - question_2
-          - question_3
+          - id: height
+            label: Height (cm)
+            datatype: number
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: number }
+
+          - id: weight
+            label: Weight (kg)
+            datatype: number
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: number }
+
+          - id: question_2
+            label: Declaration Question 2
+            datatype: text
+            widget: radio
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: question_3
+            label: Declaration Question 3
+            datatype: text
+            widget: radio
+            ocr: { engine: paddle }
+            validation: { validator: text }
 
   - page: 2
 
@@ -114,34 +508,181 @@ pages:
 
       - id: medical_questions
         fields:
-          - question_4
-          - question_5
-          - question_6
-          - question_7
-          - question_8
-          - question_9
-          - medical_details
+          - id: question_4
+            label: Medical Question 4
+            datatype: text
+            widget: radio
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: question_5
+            label: Medical Question 5
+            datatype: text
+            widget: radio
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: question_6
+            label: Medical Question 6
+            datatype: text
+            widget: radio
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: question_7
+            label: Medical Question 7
+            datatype: text
+            widget: radio
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: question_8
+            label: Medical Question 8
+            datatype: text
+            widget: radio
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: question_9
+            label: Medical Question 9
+            datatype: text
+            widget: radio
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: medical_details
+            label: Medical Details
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text, required: false }
 
       - id: signatures
         fields:
-          - insured_signature
-          - witness_signature
-          - declarant_signature
-          - sales_manager_signature
-          - insured_name
-          - witness_name
-          - declarant_name
-          - sales_manager_name
-          - insured_date
-          - witness_date
-          - declarant_date
-          - sales_manager_date
+          - id: insured_signature
+            label: Insured Signature
+            datatype: signature
+            widget: signature
+            ocr: { engine: paddle }
+            validation: { validator: none }
+
+          - id: witness_signature
+            label: Witness Signature
+            datatype: signature
+            widget: signature
+            ocr: { engine: paddle }
+            validation: { validator: none }
+
+          - id: declarant_signature
+            label: Declarant Signature
+            datatype: signature
+            widget: signature
+            ocr: { engine: paddle }
+            validation: { validator: none }
+
+          - id: sales_manager_signature
+            label: Sales Manager Signature
+            datatype: signature
+            widget: signature
+            ocr: { engine: paddle }
+            validation: { validator: none }
+
+          - id: insured_signature_name
+            label: Insured Name (Signature Block)
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: witness_name
+            label: Witness Name
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: declarant_name
+            label: Declarant Name
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: sales_manager_name
+            label: Sales Manager Name
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: insured_date
+            label: Insured Signature Date
+            datatype: date
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: date }
+
+          - id: witness_date
+            label: Witness Signature Date
+            datatype: date
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: date }
+
+          - id: declarant_date
+            label: Declarant Signature Date
+            datatype: date
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: date }
+
+          - id: sales_manager_date
+            label: Sales Manager Signature Date
+            datatype: date
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: date }
 
       - id: mph_section
         fields:
-          - asc_code
-          - asc_location
-          - source_code
-          - mph_employee_id
-          - source_id
-          - verification_date
+          - id: asc_code
+            label: ASC Code
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: asc_location
+            label: ASC Location
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: source_code
+            label: Source Code
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: mph_employee_id
+            label: MPH Employee ID
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: source_id
+            label: Source ID
+            datatype: text
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: text }
+
+          - id: verification_date
+            label: Verification Date
+            datatype: date
+            widget: textbox
+            ocr: { engine: paddle }
+            validation: { validator: date }

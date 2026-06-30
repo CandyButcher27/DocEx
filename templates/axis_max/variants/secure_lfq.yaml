@@ -4,6 +4,7 @@ inherits: base.yaml
 
 metadata:
   variant: Secure
+  reference_docx: "reference/GCL Secure_LFQ.docx"
 
 overrides:
 
@@ -14,5 +15,9 @@ overrides:
     - id: payment_details
 
       add_fields:
-
-        - rider_sum_assured
+        - id: rider_sum_assured
+          label: Rider Sum Assured
+          datatype: number
+          widget: textbox
+          ocr: { engine: paddle }
+          validation: { validator: amount }
