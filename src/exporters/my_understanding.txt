@@ -1,1 +1,0 @@
-this folder is responsible for exporting all of the given data into the required file format

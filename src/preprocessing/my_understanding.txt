@@ -1,4 +1,0 @@
-This folder is where all the preprocessing steps will go in 
-It is responsible only for image improvement
-
-OCR is not present here 
