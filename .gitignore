@@ -8,6 +8,11 @@ my_understaning.tt
 proper_docs/
 templates/**/reference/
 
+# Secrets — never commit the API keys
+.env
+.env.*
+!.env.example
+
 # Python environments
 .venv/
 venv/

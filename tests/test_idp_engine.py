@@ -108,7 +108,7 @@ def test_decision_consensus_accept():
     spec = FieldSpec("pan", ["PAN"], datatype="pan")
     cands = [OCRCandidate("ANSPK6125E", 0.95, "rapidocr"),
              OCRCandidate("ANSPK6125E", 0.93, "rapidocr+bin")]
-    dec = DecisionEngine().decide(spec, cands, np.zeros((10, 10, 3), np.uint8), None)
+    dec = DecisionEngine().decide(spec, cands, None, np.zeros((10, 10, 3), np.uint8), None)
     assert dec.status == "accepted" and dec.value == "ANSPK6125E" and dec.source == "ocr"
 
 
@@ -116,14 +116,22 @@ def test_decision_validation_fail_review():
     spec = FieldSpec("pan", ["PAN"], datatype="pan")
     cands = [OCRCandidate("NOTAPAN", 0.95, "rapidocr"),
              OCRCandidate("NOTAPAN", 0.9, "rapidocr+bin")]
-    dec = DecisionEngine().decide(spec, cands, np.zeros((10, 10, 3), np.uint8), None)
+    dec = DecisionEngine().decide(spec, cands, None, np.zeros((10, 10, 3), np.uint8), None)
     assert dec.status == "review"
 
 
 def test_decision_no_candidates_review():
     spec = FieldSpec("x", ["x"])
-    dec = DecisionEngine().decide(spec, [], np.zeros((10, 10, 3), np.uint8), None)
+    dec = DecisionEngine().decide(spec, [], None, np.zeros((10, 10, 3), np.uint8), None)
     assert dec.status == "review" and dec.source == "pending_human"
+
+
+def test_decision_vlm_authoritative():
+    spec = FieldSpec("pan", ["PAN"], datatype="pan")
+    ocr = [OCRCandidate("PKANT", 0.7, "rapidocr")]
+    vlm = OCRCandidate("ANSPK6125E", 0.9, "vlm")
+    dec = DecisionEngine().decide(spec, ocr, vlm, np.zeros((10, 10, 3), np.uint8), None)
+    assert dec.status == "accepted" and dec.value == "ANSPK6125E" and dec.source == "vlm"
 
 
 # ---------- classify ----------
@@ -142,6 +150,22 @@ def test_classify_unknown():
 
 
 # ---------- store ----------
+
+def test_vlm_extract_json():
+    from idp.vlm import _extract_json
+    assert _extract_json('```json\n[{"a":1}]\n```') == [{"a": 1}]
+    assert _extract_json('here it is: {"x": "y"} done')["x"] == "y"
+    assert _extract_json('[{"name":"f","label":"L"}]')[0]["name"] == "f"
+
+
+def test_fake_vlm():
+    from idp.vlm import FakeVLM
+    v = FakeVLM()
+    img = np.zeros((40, 40, 3), np.uint8)
+    assert v.extract_fields(img, []) == {}
+    t = v.detect_format(img, "policy number nominee member")
+    assert t.source == "vlm_fake" and t.phash
+
 
 def test_store_roundtrip(tmp_path):
     t = Template("rt", "RT", ["a", "b"],

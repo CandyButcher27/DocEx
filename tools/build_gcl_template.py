@@ -51,14 +51,14 @@ FIELDS = [
 ]
 
 SIGNATURE = [
-    "Axis Max Life",
-    "Group Credit Life Premier",
-    "Member Enrolment Form",
-    "Insured Member",
-    "PAN Number",
-    "Nominee",
-    "Premium",
-    "Loan",
+    "Group Credit Life Premier LFQ",
+    "Group Policyholder Name",
+    "Premium Financed by MPH",
+    "Base Benefit Sum Assured",
+    "Moratorium Period",
+    "Period of Insurance",
+    "Date of First Loan disbursement",
+    "Optional ATPD Sum Assured",
 ]
 
 

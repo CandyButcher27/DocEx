@@ -1,0 +1,374 @@
+template_id: vlm_PPR005312996838
+name: VLM-generated
+source: vlm_gemini
+phash: 0000040000018a8e4ab064201ac06210324000008a3028934300408160682500
+signature_phrases:
+- Group Policy Number
+- Group Policyholder Name
+- CUST/EMP ID/Proposal/Loan Application No.
+- Loan Type
+- Loan A/c No.
+- Date of first loan disbursement
+- Loan Amount/Sum Assured (in Rs.)
+- Product Name
+fields:
+- name: group_policy_number
+  anchors:
+  - Group Policy Number
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: group_policyholder_name
+  anchors:
+  - Group Policyholder Name
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: cust_emp_id_proposal_loan_application_no
+  anchors:
+  - CUST/EMP ID/Proposal/Loan Application No.
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: loan_type
+  anchors:
+  - Loan Type
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: loan_a_c_no
+  anchors:
+  - Loan A/c No.
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: date_of_first_loan_disbursement
+  anchors:
+  - Date of first loan disbursement
+  value_region: right
+  datatype: date
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: loan_amount_sum_assured_in_rs
+  anchors:
+  - Loan Amount/Sum Assured (in Rs.)
+  value_region: right
+  datatype: number
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: product_name
+  anchors:
+  - Product Name
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: name_of_the_insured_member
+  anchors:
+  - Name of the Insured Member
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: date_of_birth_of_insured_member
+  anchors:
+  - Date of Birth of Insured Member
+  value_region: right
+  datatype: date
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: arma_number
+  anchors:
+  - ARMA Number
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: pan_number
+  anchors:
+  - PAN Number
+  value_region: right
+  datatype: pan
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: annual_income
+  anchors:
+  - Annual Income
+  value_region: right
+  datatype: number
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: premium_amount
+  anchors:
+  - Premium Amount
+  value_region: right
+  datatype: number
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: reference_cheque_no
+  anchors:
+  - Reference Cheque No.
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: payee_bank
+  anchors:
+  - Payee Bank
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: period_of_insurance
+  anchors:
+  - Period of Insurance
+  value_region: right
+  datatype: number
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: roi
+  anchors:
+  - ROI
+  value_region: right
+  datatype: number
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: moratorium_period
+  anchors:
+  - Moratorium Period
+  value_region: right
+  datatype: number
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: base_benefit_sum_assured
+  anchors:
+  - Base Benefit Sum Assured
+  value_region: right
+  datatype: number
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: rider_sum_assured
+  anchors:
+  - Rider Sum Assured
+  value_region: right
+  datatype: number
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: period_of_insurance_rider_benefit
+  anchors:
+  - Period of insurance
+  value_region: right
+  datatype: number
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: please_specify_the_rider_formula_up_to
+  anchors:
+  - Please Specify The Rider formula up to
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: percentage_of_base_benefit_and_maximum_of_rs
+  anchors:
+  - '% of Base Benefit and Maximum of Rs.'
+  value_region: right
+  datatype: number
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: permanent_address
+  anchors:
+  - Permanent Address
+  value_region: below
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: landmark
+  anchors:
+  - Landmark
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: state
+  anchors:
+  - State
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: pin
+  anchors:
+  - PIN
+  value_region: right
+  datatype: number
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: city
+  anchors:
+  - City
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: mobile_no
+  anchors:
+  - Mobile No.
+  value_region: right
+  datatype: number
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: landline_no
+  anchors:
+  - Landline No.
+  value_region: right
+  datatype: number
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: email_id
+  anchors:
+  - Email ID
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: name_of_proposer
+  anchors:
+  - Name of Proposer
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: date_of_birth_proposer
+  anchors:
+  - Date of Birth
+  value_region: right
+  datatype: date
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: relationship_with_the_assured
+  anchors:
+  - Relationship with the Assured
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: nominee_1_name
+  anchors:
+  - Nominee Name
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: nominee_1_date_of_birth
+  anchors:
+  - Date of Birth
+  value_region: right
+  datatype: date
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: nominee_1_gender
+  anchors:
+  - Gender
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: nominee_1_relationship_with_life_insured
+  anchors:
+  - Relationship with Life Insured
+  value_region: right
+  datatype: text
+  regex: null
+  required: false
+  max_len: null
+  choices: null
+- name: nominee_1_percentage_share
+  anchors:
+  - Percentage Share
+  value_region: right
+  datatype: number
+  regex: null
+  required: false
+  max_len: null
+  choices: null
