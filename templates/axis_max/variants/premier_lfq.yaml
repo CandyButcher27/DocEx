@@ -1,0 +1,18 @@
+id: axis_max_lfq_premier
+
+inherits: base.yaml
+
+metadata:
+  variant: Premier
+
+overrides:
+
+  page: 1
+
+  sections:
+
+    - id: payment_details
+
+      add_fields:
+
+        - optional_atpd_sum_assured

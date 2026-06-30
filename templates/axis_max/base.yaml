@@ -1,0 +1,147 @@
+id: axis_max_lfq_base
+
+name: Axis Max LFQ Base Template
+
+inherits: null
+
+metadata:
+  issuer: Axis Max Life Insurance
+  document_type: Group Credit Life Member Enrolment Form
+
+pages:
+
+  - page: 1
+
+    sections:
+
+      - id: policy_details
+        fields:
+          - group_policy_number
+          - group_policyholder_name
+          - customer_id
+          - loan_type
+          - loan_account_number
+          - first_loan_disbursement_date
+          - loan_amount
+          - product_name
+
+      - id: applicant_details
+        fields:
+          - applicant_type
+          - share_in_loan
+          - insured_name
+          - dob
+          - gender
+          - abha_number
+          - nationality
+          - occupation
+          - education
+          - pan_number
+          - annual_income
+
+      - id: payment_details
+        fields:
+          - premium_financed
+          - premium_amount
+          - cheque_reference
+          - payee_bank
+          - period_of_insurance
+          - roi
+          - moratorium_applicable
+          - moratorium_period
+          - interest_payment_option
+          - cover_type
+          - base_sum_assured
+
+      - id: rider_details
+        fields:
+          - cia_rider_enabled
+          - cia_option
+          - rider_period
+          - rider_formula_percent
+          - rider_formula_max_amount
+
+      - id: communication
+        fields:
+          - address
+          - landmark
+          - city
+          - state
+          - pin
+          - mobile
+          - landline
+          - email
+
+      - id: proposer
+        fields:
+          - proposer_name
+          - proposer_dob
+          - proposer_gender
+          - proposer_relationship
+
+      - id: nominee
+        repeatable: true
+        max_items: 2
+        fields:
+          - nominee_name
+          - nominee_dob
+          - nominee_gender
+          - nominee_relationship
+          - nominee_share
+          - nominee_mobile
+          - nominee_email
+          - nominee_address
+          - nominee_account_number
+          - nominee_ifsc
+
+      - id: appointee
+        fields:
+          - appointee_name
+          - appointee_dob
+          - appointee_gender
+          - appointee_relationship
+
+      - id: declaration_questions
+        fields:
+          - height
+          - weight
+          - question_2
+          - question_3
+
+  - page: 2
+
+    sections:
+
+      - id: medical_questions
+        fields:
+          - question_4
+          - question_5
+          - question_6
+          - question_7
+          - question_8
+          - question_9
+          - medical_details
+
+      - id: signatures
+        fields:
+          - insured_signature
+          - witness_signature
+          - declarant_signature
+          - sales_manager_signature
+          - insured_name
+          - witness_name
+          - declarant_name
+          - sales_manager_name
+          - insured_date
+          - witness_date
+          - declarant_date
+          - sales_manager_date
+
+      - id: mph_section
+        fields:
+          - asc_code
+          - asc_location
+          - source_code
+          - mph_employee_id
+          - source_id
+          - verification_date

@@ -1,0 +1,18 @@
+id: axis_max_lfq_secure
+
+inherits: base.yaml
+
+metadata:
+  variant: Secure
+
+overrides:
+
+  page: 1
+
+  sections:
+
+    - id: payment_details
+
+      add_fields:
+
+        - rider_sum_assured
