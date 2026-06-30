@@ -78,10 +78,27 @@ honor these so modules stay swappable and independently testable.
   carries `reference_images: dict[int, str]`.
 - **PDF page handling.** `scanned_docs/` are multi-page PDFs. The loader must page-split; templates are
   defined per page (`pages: list[PageConfig]`).
-- **The ROI-coordinate gap.** Templates currently list *what* fields exist but **not where** — `base.yaml`
-  has no coordinates and `ROIConfig` fields are all `None`. Nothing downstream of registration can run until
-  ROIs are populated. The **GUI annotator** (`tools/roi_annotator.py`) is the chosen bridge: click each field's
-  box on the reference image, write normalized `[0,1]` coords back into the template YAML. This is why the
-  annotator is module #2 in the roadmap, right after the loader.
+- **The ROI-coordinate gap — two ways to fill it.** Templates list *what* fields exist; ROIs say *where*. A
+  template with `ROIConfig` coords still `None` is "unannotated" (`annotated_fraction` low) and the router
+  sends its documents to the VLM path. Coords get populated either (a) by the **GUI annotator**
+  (`tools/roi_annotator.py`) — click each field's box on the reference image — or (b) automatically by the
+  **VLM fallback**, which derives bounding boxes for an unknown doc and `save_generated_template` writes them
+  into a fresh template. Both write normalized `[0,1]` coords into template YAML.
 - **Normalized coordinates.** All ROIs are stored as floats in `[0,1]` (see `ROI.to_pixels`), so a template is
   resolution-independent and survives rescaling between the reference and a scanned page.
+
+## Routing (implemented — `registration/router.py`)
+`route_document` is the gate between the two paths. It feature-matches the scanned page-1 against every
+registered template's reference image (ORB/SIFT/AKAZE + RANSAC → inlier-ratio `score`). It chooses the
+**template-match path** only when the best match clears both `REGISTRATION_MATCH_THRESHOLD` (ratio) and
+`REGISTRATION_MIN_INLIERS` (count) **and** that template is annotated enough (`annotated_fraction ≥ 0.5`).
+Otherwise it routes to the **VLM-fallback path**, which derives structure + ROIs, auto-generates and persists
+a template (with the scanned pages saved as its reference images), reloads the registry, and then runs the
+ordinary template path on that new template — so the second occurrence of a similar doc is deterministic.
+**Extraction is always OCR**; the VLM only proposes geometry/structure, never reads values.
+
+## Offline defaults / pluggability
+`OCR_ENGINE` (`stub`|tesseract|easyocr|trocr|paddle) and `VLM_PROVIDER` (`fake`|anthropic|openai) are env-
+selected. `stub`+`fake` are deterministic and dependency-free — they let the whole spine run and be tested
+offline. Real engines/providers are lazy-imported and live in `requirements-optional.txt`. Config is read
+once via `src/configs/settings.py` (`.env`). CLI entry point: `extract.py`.

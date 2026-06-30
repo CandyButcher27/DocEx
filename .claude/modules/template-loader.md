@@ -27,22 +27,26 @@ extraction, registration, or coordinate capture.
 - Nothing else; this is the root of the dependency graph.
 
 ## Design decisions (this module)
-- **Where field metadata (datatype/roi/ocr/validation) comes from.** `base.yaml` currently lists field *ids*
-  only — `FieldConfig` needs datatype, ROI, OCR, validation, export per field. Decide: do these live in
-  `templates/schema/*.yaml` (field_types.yaml, validation.yaml — currently empty) and get joined by id, or
-  inline in the template YAML? Resolve and record here. This is the main open design question.
-- Inheritance merge semantics: how `add_fields` / overrides combine with the base section list; section
-  matching by `id`; handling `repeatable` / `max_items` sections (see `nominee`).
-- Validation on load: fail fast on unknown field ids, duplicate ids, missing referenced schema entries.
+- **Field metadata is inline, not schema-joined.** Resolved — see decisions.md D9. Every field in
+  `base.yaml`/`variants/*.yaml` carries its full `FieldConfig` shape (`id, label, datatype, widget, roi, ocr,
+  validation, export`) directly. No `templates/schema/*.yaml` join step; those placeholder files are removed.
+  The loader is a straight YAML → dataclass deserializer plus base+variant inheritance merge.
+- Inheritance merge semantics: variant's `overrides.sections[].add_fields` appends full field dicts to the
+  matching base section (matched by `id`); `repeatable` / `max_items` carried on `SectionConfig` (see
+  `nominee`, `max_items: 2`).
+- Validation on load: fail fast on unknown field ids referenced by overrides, **duplicate field ids
+  template-wide** (not just per-section — D9), missing required keys.
 
 ## Open questions
-- Schema-join vs inline field metadata (above) — **blocks** ROIConfig/OCRConfig population, so settle early.
-- ROI coords are absent at this stage and get filled by the annotator (#2). Loader should tolerate
-  `ROIConfig` with `None` coords (template valid but not yet annotated) and expose whether a template is
-  "annotated / ready".
+- ROI coords are absent at this stage and get filled by the annotator (#2). Loader tolerates a missing
+  `roi:` key in YAML by defaulting to `ROIConfig(None, None, None, None)` (template valid but not yet
+  annotated) and should expose whether a template is "annotated / ready".
 
-## Tests
-- `tests/test_template_loader.py`: load `axis_max` base, assert section/field counts; load `premier_lfq`
-  and assert `optional_atpd_sum_assured` was added to `payment_details`; assert `secure_lfq` resolves; assert
-  fail-fast on a malformed template.
-- Smoke: load all `templates/axis_max/*` and print the resolved field tree for one variant.
+## Tests — done
+- `tests/test_template_loader.py` (6 tests, all passing): base loads with 90 unique fields across 2 pages;
+  `premier_lfq` adds `optional_atpd_sum_assured` to `payment_details`; `secure_lfq` adds `rider_sum_assured`;
+  `load_family` registers both variants; `nominee` section resolves as repeatable with `max_items=2`;
+  fail-fast on a duplicate field id and on an override targeting a nonexistent section.
+- Smoke-tested: `load_family(Path("templates"), "axis_max")` loads both variants, printed the resolved
+  section/field-count tree for `premier_lfq` — `payment_details` correctly shows 12 fields (11 base + 1
+  variant addition).

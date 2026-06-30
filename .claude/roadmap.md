@@ -7,28 +7,36 @@ Two phases. Finish Phase 1 end-to-end and test it on a real PDF before touching 
 Goal: make one `scanned_docs/*.pdf` flow all the way to an exported file, matched against an `axis_max`
 template. Build in this order — each module's output feeds the next (contracts in [architecture.md](architecture.md)):
 
-1. **`template/` loader + parser + registry** — YAML (base + variant inheritance) → flat `Template` objects;
-   index them in a registry. *(next session)*
-2. **`tools/roi_annotator.py`** — GUI to capture normalized field coordinates onto the reference image and
-   write them into the template YAML. *Templates are unusable downstream without ROIs.*
-3. **PDF loader + `preprocessing/`** — PDF → page images; deskew / denoise / binarize.
-4. **`registration/`** — match the scanned page to a template and align it to the reference (ORB/SIFT/AKAZE).
-5. **`roi/`** — crop each field's region from the aligned page.
-6. **`ocr/`** — run the OCR engine (pluggable; pick the engine here) on each crop → `OCRResult`.
-7. **`validation/` + `confidence/`** — normalize, validate, score each field → `ValidationResult`.
-8. **`exporters/`** — serialize to JSON / CSV / Excel.
-9. **`pipeline/`** — orchestrate 1–8 over one document. Smoke-test on a single real PDF.
+1. **`template/` loader + parser + registry** — ✅ done. YAML (base + variant inheritance) → flat `Template`
+   objects; indexed in a `TemplateRegistry`.
+2. **`tools/roi_annotator.py`** — ✅ built (Tkinter, renders `.docx` reference via `docx2pdf`+`pdf2image`,
+   click-to-box, writes ROI + `registration.reference_images` back to YAML). **Not yet run** — no field has a
+   real ROI. *Templates are unusable downstream without ROIs.* Run it next, before module #3.
+3. **PDF loader + `preprocessing/`** — ✅ `pdf_to_images` + `clean_image` (deskew/denoise/CLAHE/threshold).
+4. **`registration/`** — ✅ ORB/SIFT/AKAZE matcher + aligner + `route_document` routing gate.
+5. **`roi/`** — ✅ `crop_page_fields` (normalized ROI crops).
+6. **`ocr/`** — ✅ pluggable adapters (stub default + lazy tesseract/easyocr/trocr/paddle).
+7. **`validation/` + `confidence/`** — ✅ per-validator normalize+validate + confidence score.
+8. **`exporters/`** — ✅ JSON / CSV / Excel.
+9. **`pipeline/`** — ✅ `extract_document` orchestrates end-to-end; smoke-tested on a real PDF.
 
-**Milestone P1:** one scanned PDF → exported JSON, field by field, verified against its `proper_docs/` reference.
+**Milestone P1:** ✅ a scanned PDF flows to an exported file, field by field. (Values are real once a real OCR
+engine replaces the `stub`; geometry is real once `axis_max` is annotated or derived by a real VLM.)
 
-## Phase 2 — VLM / unknown-document track (AFTER P1 works)
+## Phase 2 — VLM / unknown-document track — ✅ built
 
-1. **Template-match gate** — does the scanned doc match any registered template? (built on registration's matcher).
-2. **VLM structure derivation** — on a miss, a VLM infers field structure. Provider undecided (D7) → keep behind
-   an interface.
-3. **Extract + export** — OCR fills the values; export as in Phase 1.
-4. **Auto-template generation** — persist the inferred structure (with ROIs) as a new template so the next
-   similar document takes the deterministic path.
+1. **Template-match gate** — ✅ `route_document` (built on registration's matcher).
+2. **VLM structure derivation** — ✅ `VLMProvider` interface, provider-agnostic (D7 still open); `fake` tested,
+   `anthropic`/`openai` wired behind env config.
+3. **Extract + export** — ✅ OCR fills values down the same template path; export as Phase 1.
+4. **Auto-template generation** — ✅ `save_generated_template` persists the derived structure + ROIs + reference
+   images as a new template; next similar doc takes the deterministic path.
 
-**Milestone P2:** an unseen document type extracts via VLM, and a reusable template is saved and picked up on
-the next run of a similar doc.
+**Milestone P2:** ✅ smoke-tested — an unknown doc routes to the (fake) VLM, a reusable template is saved, and
+the second run of the same doc routes template-match (score 1.0). Swap `VLM_PROVIDER=anthropic|openai` + key
+to make it real.
+
+## What's left (real-world hardening, not new architecture)
+- Install + select a real OCR engine; tune for the handwritten forms.
+- Choose the VLM provider (D7) and validate derived ROIs against real scans.
+- Tune registration thresholds on the real `scanned_docs/`.
