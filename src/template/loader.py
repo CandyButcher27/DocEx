@@ -64,8 +64,26 @@ def load_variant(family_dir: Path, variant_filename: str, family: str) -> Templa
 def load_family(templates_dir: Path, family: str) -> TemplateRegistry:
     family_dir = templates_dir / family
     registry = TemplateRegistry()
+    _register_family(registry, family_dir, family)
+    return registry
 
-    for variant_path in sorted((family_dir / "variants").glob("*.yaml")):
-        registry.register(load_variant(family_dir, variant_path.name, family))
+
+def _register_family(registry: TemplateRegistry, family_dir: Path, family: str) -> None:
+    variants_dir = family_dir / "variants"
+    variant_paths = sorted(variants_dir.glob("*.yaml")) if variants_dir.is_dir() else []
+
+    if variant_paths:
+        for variant_path in variant_paths:
+            registry.register(load_variant(family_dir, variant_path.name, family))
+    elif (family_dir / "base.yaml").is_file():
+        registry.register(load_base(family_dir, family))
+
+
+def load_all_templates(templates_dir: Path) -> TemplateRegistry:
+    registry = TemplateRegistry()
+
+    for family_dir in sorted(p for p in templates_dir.iterdir() if p.is_dir()):
+        if (family_dir / "base.yaml").is_file():
+            _register_family(registry, family_dir, family_dir.name)
 
     return registry
