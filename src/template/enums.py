@@ -24,6 +24,7 @@ class OCREngine(Enum):
     TROCR = "trocr"
     TESSERACT = "tesseract"
     EASYOCR = "easyocr"
+    STUB = "stub"
 
 
 class ValidatorType(Enum):
@@ -56,7 +57,8 @@ class ExportFormat(Enum):
 
     JSON = "json"
     CSV = "csv"
-    
+    EXCEL = "excel"
+
 class FieldWidget(Enum):
     """Represents how a field appears on the document."""
 
