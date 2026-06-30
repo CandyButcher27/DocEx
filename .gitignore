@@ -1,0 +1,27 @@
+# Files which have been made for my understanding of the project structure
+my_understanding.txt
+my_understanding.md
+my_understaning.tt
+
+# Confidential company documents — never publish (real forms used to build templates)
+*.docx
+proper_docs/
+templates/**/reference/
+
+# Python environments
+.venv/
+venv/
+
+# Python cache and test artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Project-specific generated folders
+output/
+documents/
+gpt_chats/
+graphify-out/
+me/
+scanned_docs/

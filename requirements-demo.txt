@@ -1,0 +1,7 @@
+numpy>=1.26
+opencv-python-headless>=4.10
+PyYAML>=6.0
+rapidocr-onnxruntime>=1.4
+onnxruntime>=1.17
+docx2pdf>=0.1.8
+pytesseract>=0.3.13
