@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Template Field Tool</title>
+<style>
+  body { font-family: sans-serif; margin: 20px; }
+  #controls { margin-bottom: 12px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  #main { display: flex; gap: 20px; align-items: flex-start; }
+  #canvasWrap { border: 1px solid #999; display: inline-block; position: relative; }
+  canvas { display: block; cursor: crosshair; }
+  button { padding: 6px 12px; }
+  input[type=text] { padding: 5px; }
+  #status { margin-top: 10px; color: #333; }
+  #fieldPanel { width: 260px; }
+  #fieldList { list-style: none; padding: 0; margin: 10px 0 0 0; }
+  #fieldList li { padding: 6px; border: 1px solid #ddd; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+  #fieldList li.required { border-left: 4px solid #c00; }
+  #fieldList li.optional { border-left: 4px solid #999; }
+  #fieldList button { padding: 2px 8px; }
+  label.toggle { display: flex; align-items: center; gap: 4px; }
+</style>
+</head>
+<body>
+
+<div id="controls">
+  <select id="docSelect"></select>
+  <select id="pageSelect"></select>
+  <input type="text" id="fieldName" placeholder="Field name">
+  <select id="fieldType">
+    <option value="string">string</option>
+    <option value="number">number</option>
+    <option value="checkbox">checkbox</option>
+    <option value="date">date</option>
+    <option value="alphanumeric">alphanumeric</option>
+  </select>
+  <label class="toggle"><input type="checkbox" id="requiredToggle"> Required</label>
+  <button id="confirmBtn" disabled>Save field</button>
+  <button id="clearBtn">Clear selection</button>
+</div>
+
+<div id="main">
+  <div id="canvasWrap">
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <div id="fieldPanel">
+    <strong>Fields</strong>
+    <ul id="fieldList"></ul>
+  </div>
+</div>
+
+<div id="status"></div>
+
+<script>
+const docSelect = document.getElementById('docSelect');
+const pageSelect = document.getElementById('pageSelect');
+const fieldName = document.getElementById('fieldName');
+const fieldType = document.getElementById('fieldType');
+const requiredToggle = document.getElementById('requiredToggle');
+const confirmBtn = document.getElementById('confirmBtn');
+const clearBtn = document.getElementById('clearBtn');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const status = document.getElementById('status');
+const fieldList = document.getElementById('fieldList');
+
+let currentImage = null;
+let box = null;
+let dragging = false;
+let startX = 0, startY = 0;
+let currentTemplate = { fields: [] };
+
+function setStatus(msg) { status.textContent = msg; }
+
+async function loadDocs() {
+  const res = await fetch('/docs');
+  const files = await res.json();
+  docSelect.innerHTML = '';
+  files.forEach(f => {
+    const opt = document.createElement('option');
+    opt.value = f;
+    opt.textContent = f;
+    docSelect.appendChild(opt);
+  });
+  if (files.length) await loadPages();
+}
+
+async function loadPages() {
+  const file = docSelect.value;
+  const res = await fetch('/pages?file=' + encodeURIComponent(file));
+  const data = await res.json();
+  pageSelect.innerHTML = '';
+  for (let i = 1; i <= data.pages; i++) {
+    const opt = document.createElement('option');
+    opt.value = i - 1;
+    opt.textContent = 'Page ' + i;
+    pageSelect.appendChild(opt);
+  }
+  await loadTemplate();
+  await loadPage();
+}
+
+async function loadTemplate() {
+  const file = docSelect.value;
+  const res = await fetch('/template?file=' + encodeURIComponent(file));
+  currentTemplate = await res.json();
+  renderFieldList();
+}
+
+function renderFieldList() {
+  fieldList.innerHTML = '';
+  currentTemplate.fields.forEach(f => {
+    const li = document.createElement('li');
+    li.className = f.required ? 'required' : 'optional';
+    const label = document.createElement('span');
+    label.textContent = `${f.name} [${f.type}] (p${f.page + 1}${f.required ? ', required' : ''})`;
+    const del = document.createElement('button');
+    del.textContent = 'x';
+    del.onclick = async () => {
+      await fetch('/delete_field', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ file: docSelect.value, name: f.name }),
+      });
+      await loadTemplate();
+    };
+    li.appendChild(label);
+    li.appendChild(del);
+    fieldList.appendChild(li);
+  });
+}
+
+async function loadPage() {
+  const file = docSelect.value;
+  const page = pageSelect.value;
+  const img = new Image();
+  img.onload = () => {
+    currentImage = img;
+    canvas.width = img.width;
+    canvas.height = img.height;
+    draw();
+  };
+  img.src = '/render?file=' + encodeURIComponent(file) + '&page=' + page + '&t=' + Date.now();
+  box = null;
+  confirmBtn.disabled = true;
+  setStatus('');
+}
+
+function draw() {
+  if (!currentImage) return;
+  ctx.drawImage(currentImage, 0, 0);
+  const page = parseInt(pageSelect.value, 10);
+  currentTemplate.fields.filter(f => f.page === page).forEach(f => {
+    ctx.strokeStyle = f.required ? '#c00' : '#999';
+    ctx.lineWidth = 2;
+    const x = f.box.x * currentImage.width;
+    const y = f.box.y * currentImage.height;
+    const w = f.box.w * currentImage.width;
+    const h = f.box.h * currentImage.height;
+    ctx.strokeRect(x, y, w, h);
+    ctx.font = '14px sans-serif';
+    ctx.fillStyle = f.required ? '#c00' : '#999';
+    ctx.fillText(f.name, x, y - 4);
+  });
+  if (box) {
+    ctx.strokeStyle = 'blue';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(box.x, box.y, box.w, box.h);
+  }
+}
+
+canvas.addEventListener('mousedown', e => {
+  const rect = canvas.getBoundingClientRect();
+  startX = e.clientX - rect.left;
+  startY = e.clientY - rect.top;
+  dragging = true;
+  box = { x: startX, y: startY, w: 0, h: 0 };
+});
+
+canvas.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  const rect = canvas.getBoundingClientRect();
+  const curX = e.clientX - rect.left;
+  const curY = e.clientY - rect.top;
+  box = {
+    x: Math.min(startX, curX),
+    y: Math.min(startY, curY),
+    w: Math.abs(curX - startX),
+    h: Math.abs(curY - startY),
+  };
+  draw();
+});
+
+canvas.addEventListener('mouseup', () => {
+  dragging = false;
+  confirmBtn.disabled = !box || box.w < 2 || box.h < 2;
+});
+
+clearBtn.addEventListener('click', () => {
+  box = null;
+  confirmBtn.disabled = true;
+  draw();
+});
+
+docSelect.addEventListener('change', loadPages);
+pageSelect.addEventListener('change', loadPage);
+
+confirmBtn.addEventListener('click', async () => {
+  if (!box || !currentImage) return;
+  const name = fieldName.value.trim();
+  if (!name) {
+    setStatus('Enter field name first.');
+    return;
+  }
+  const payload = {
+    file: docSelect.value,
+    name: name,
+    type: fieldType.value,
+    required: requiredToggle.checked,
+    page: parseInt(pageSelect.value, 10),
+    x: box.x / currentImage.width,
+    y: box.y / currentImage.height,
+    w: box.w / currentImage.width,
+    h: box.h / currentImage.height,
+  };
+  setStatus('Saving...');
+  const res = await fetch('/save_field', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  setStatus(`Saved to templates/${data.saved} (${data.fields} fields)`);
+  fieldName.value = '';
+  fieldType.value = 'string';
+  requiredToggle.checked = false;
+  box = null;
+  confirmBtn.disabled = true;
+  await loadTemplate();
+  draw();
+});
+
+loadDocs();
+</script>
+</body>
+</html>
