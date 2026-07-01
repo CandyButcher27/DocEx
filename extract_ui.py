@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 
 from pdf2image import convert_from_path
 from paddleocr import PaddleOCR
+from PIL import Image
 
 from llm_client import run_extraction
 
@@ -52,6 +53,13 @@ def parse_multipart(body, boundary):
         if m:
             return m.group(1), content
     return None, None
+
+
+def image_bytes_to_pdf_bytes(image_bytes):
+    img = Image.open(BytesIO(image_bytes)).convert("RGB")
+    out = BytesIO()
+    img.save(out, format="PDF")
+    return out.getvalue()
 
 
 def run_ocr_on_pdf(pdf_path):
@@ -142,6 +150,9 @@ class Handler(BaseHTTPRequestHandler):
             if not filename:
                 self._send_json({"error": "no file found"}, 400)
                 return
+
+            if filename.lower().endswith((".png", ".jpg", ".jpeg")):
+                content = image_bytes_to_pdf_bytes(content)
 
             doc_id = uuid.uuid4().hex
             pdf_path = os.path.join(UPLOADS, f"{doc_id}.pdf")

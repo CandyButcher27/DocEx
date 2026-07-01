@@ -1,0 +1,128 @@
+template: GCL Premier_LFQ 1
+fields:
+- name: Group Policy Number
+  type: string
+  required: false
+  page: 0
+  box:
+    x: 0.24357189851648667
+    y: 0.1432271430295417
+    w: 0.257856567284448
+    h: 0.017094017094017096
+- name: Group Policy Holder Name
+  type: string
+  required: false
+  page: 0
+  box:
+    x: 0.6585598114898952
+    y: 0.14379694359934228
+    w: 0.31990330378726833
+    h: 0.016524216524216526
+- name: Loan Application Number
+  type: string
+  required: false
+  page: 0
+  box:
+    x: 0.24518350206201447
+    y: 0.17228697208937077
+    w: 0.25624496373892025
+    h: 0.019943019943019943
+- name: Loan Type
+  type: string
+  required: false
+  page: 0
+  box:
+    x: 0.6569482079443674
+    y: 0.17228697208937077
+    w: 0.32393231265108785
+    h: 0.019373219373219373
+- name: Loan Account Number
+  type: string
+  required: false
+  page: 0
+  box:
+    x: 0.24357189851648667
+    y: 0.18767158747398616
+    w: 0.2602739726027397
+    h: 0.019943019943019943
+- name: Date of Disbursement
+  type: string
+  required: false
+  page: 0
+  box:
+    x: 0.6609772168081869
+    y: 0.186531986334385
+    w: 0.3166800966962127
+    h: 0.022222222222222223
+- name: Loan Amount
+  type: string
+  required: false
+  page: 0
+  box:
+    x: 0.24518350206201447
+    y: 0.20181300497462606
+    w: 0.25382755842062854
+    h: 0.021082621082621083
+- name: Applicant Details
+  type: checkbox
+  required: false
+  page: 0
+  box:
+    x: 0.02197641100641415
+    y: 0.23040663020902888
+    w: 0.9556809024979855
+    h: 0.022222222222222223
+- name: Name
+  type: string
+  required: false
+  page: 0
+  box:
+    x: 0.19361218860512486
+    y: 0.30997150997150996
+    w: 0.40370668815471394
+    h: 0.018233618233618232
+- name: Date of Birth
+  type: date
+  required: false
+  page: 0
+  box:
+    x: 0.7641198437219662
+    y: 0.30997150997150996
+    w: 0.2119258662369057
+    h: 0.022222222222222223
+- name: Nationality
+  type: checkbox
+  required: false
+  page: 0
+  box:
+    x: 0.02358801455194195
+    y: 0.3418803418803419
+    w: 0.9572925060435133
+    h: 0.019943019943019943
+- name: Occupation
+  type: checkbox
+  required: false
+  page: 0
+  box:
+    x: 0.01714160036983075
+    y: 0.35607355449274397
+    w: 0.967767929089444
+    h: 0.038746438746438745
+- name: PAN
+  type: alphanumeric
+  required: false
+  page: 0
+  box:
+    x: 0.12270163260190166
+    y: 0.40564620406539353
+    w: 0.48106365834004833
+    h: 0.019943019943019943
+- name: Annual Income
+  type: number
+  required: false
+  page: 0
+  box:
+    x: 0.692403485945979
+    y: 0.4050246192519142
+    w: 0.2771958098307816
+    h: 0.02507122507122507

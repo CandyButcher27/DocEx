@@ -6,7 +6,11 @@ my_understaning.tt
 # Confidential company documents — never publish (real forms used to build templates)
 *.docx
 proper_docs/
+proper_docs_pdf/
 templates/**/reference/
+
+# Runtime scratch — user-uploaded docs, not source
+uploads/
 
 # Secrets — never commit the API keys
 .env
