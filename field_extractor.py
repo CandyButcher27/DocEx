@@ -1,5 +1,4 @@
 import json
-import os
 import re
 from pathlib import Path
 from statistics import median
@@ -388,21 +387,6 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
         from anchor_fill import classify_missing
         state_override = classify_missing(text_missing, ocr_entries, pdf_path)
 
-    # Part D — VLM bbox-locator pass (off unless USE_VLM set): locate only no_output fields, crop, re-OCR
-    vlm_paths = set()
-    if pdf_path and os.environ.get("USE_VLM", "").lower() in ("1", "true", "yes"):
-        vlm_targets = [
-            {"path": m["path"], "label": m["label"]}
-            for m in text_missing
-            if state_override.get(m["path"]) == "no_output" and not m["path"].startswith(SUSPECT_SECTIONS)
-        ]
-        if vlm_targets:
-            from vlm_locate import vlm_recover
-            for p, val in vlm_recover(vlm_targets, ocr_entries, pdf_path).items():
-                flat_human[p] = val
-                vlm_paths.add(p)
-                state_override.pop(p, None)
-
     for p, f in metas:
         if f["coded"] or flat_human[p] == "NOT_FOUND":
             continue
@@ -423,7 +407,7 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
             conf, low = None, False
         elif f.get("answer_field"):
             conf, low = None, found
-        elif (p in anchor_paths or p in omr_paths or p in vlm_paths) and found:
+        elif (p in anchor_paths or p in omr_paths) and found:
             conf, low = None, True
         else:
             conf = _confidence(human, ocr_entries) if found else None
@@ -433,8 +417,6 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
             note = "recovered via anchor — verify"
         if p in omr_paths and found and not note:
             note = "checkbox detected — verify"
-        if p in vlm_paths and found and not note:
-            note = "vlm-located — verify"
         state = "found" if found else state_override.get(p, "no_output")
         item = {
             "path": p,
