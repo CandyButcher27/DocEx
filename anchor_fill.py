@@ -1,6 +1,9 @@
 import re
 
 from ocr_engine import render_pages, ocr_image
+from checkbox_omr import _ink_ratio
+
+BLANK_INK_THRESH = 0.03   # ink ratio in the value region below this = form left the field blank
 
 MAX_WIDTH = 520
 Y_PAD = 5
@@ -147,3 +150,29 @@ def anchor_fill(missing, ocr_entries, pdf_path, all_labels=None):
         if value and len(value) <= MAX_VALUE_LEN and len(value.split()) <= MAX_VALUE_TOKENS:
             recovered[f["path"]] = value
     return recovered
+
+
+def classify_missing(missing, ocr_entries, pdf_path):
+    """For each still-missing field, decide 'blank' (form left it empty) vs 'no_output' (has ink, unread)."""
+    if not missing:
+        return {}
+    pages = render_pages(pdf_path)
+    out = {}
+    for f in missing:
+        variants = [f["label"]] + ALIASES.get(f["path"], [])
+        anchor = _find_anchor(variants, ocr_entries)
+        page_idx = anchor.get("page", 0) if anchor else 0
+        if anchor is None or page_idx >= len(pages):
+            out[f["path"]] = "blank"   # label not on the form/page → OCR saw nothing → blank (VLM skips)
+            continue
+        img = pages[page_idx]
+        w, h = img.size
+        x0, y0, x1, y1 = anchor["bbox"]
+        cx0, cy0 = x1 + X_GAP, max(0, y0 - Y_PAD)
+        cx1, cy1 = _right_bound(anchor, ocr_entries, w), min(h, y1 + Y_PAD)
+        if cx1 - cx0 < 20 or cy1 - cy0 < 8:
+            out[f["path"]] = "no_output"
+            continue
+        ink = _ink_ratio(img.crop((cx0, cy0, cx1, cy1)).convert("L"))
+        out[f["path"]] = "no_output" if ink > BLANK_INK_THRESH else "blank"
+    return out

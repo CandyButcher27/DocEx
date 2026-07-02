@@ -40,8 +40,15 @@ def ocr_image(pil_img):
     return out
 
 
+_page_cache = {}
+
+
 def render_pages(pdf_path):
-    return convert_from_path(pdf_path, dpi=DPI)
+    key = (pdf_path, os.path.getmtime(pdf_path))
+    if key not in _page_cache:
+        _page_cache.clear()
+        _page_cache[key] = convert_from_path(pdf_path, dpi=DPI)
+    return _page_cache[key]
 
 
 def run_ocr_on_pdf(pdf_path):

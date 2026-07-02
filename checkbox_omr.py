@@ -102,6 +102,6 @@ def detect(coded_fields, ocr_entries, pdf_path):
         if top_ink < MIN_INK:
             continue
         if runner > 0 and top_ink < MARGIN * runner:
-            continue  # ambiguous — leave for review
+            continue  # ambiguous — leave NO_OUTPUT for review
         out[f["path"]] = top_text
     return out

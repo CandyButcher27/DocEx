@@ -1,4 +1,5 @@
 import json
+import os
 import re
 from pathlib import Path
 from statistics import median
@@ -374,6 +375,34 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
                     flat_human[p] = "NOT_FOUND"
                     notes.setdefault(p, "dropped — section has no name")
 
+    # Part C — classify remaining missing singleton text fields: blank (empty on form) vs no_output (has ink)
+    state_override = {}
+    text_missing = [
+        {"path": p, "label": f["label"]}
+        for p, f in metas
+        if not f.get("repeat_group") and not f["coded"] and not f.get("readonly")
+        and not f.get("answer_field") and "options" not in f
+        and flat_human[p] == "NOT_FOUND"
+    ]
+    if pdf_path and text_missing:
+        from anchor_fill import classify_missing
+        state_override = classify_missing(text_missing, ocr_entries, pdf_path)
+
+    # Part D — VLM bbox-locator pass (off unless USE_VLM set): locate only no_output fields, crop, re-OCR
+    vlm_paths = set()
+    if pdf_path and os.environ.get("USE_VLM", "").lower() in ("1", "true", "yes"):
+        vlm_targets = [
+            {"path": m["path"], "label": m["label"]}
+            for m in text_missing
+            if state_override.get(m["path"]) == "no_output" and not m["path"].startswith(SUSPECT_SECTIONS)
+        ]
+        if vlm_targets:
+            from vlm_locate import vlm_recover
+            for p, val in vlm_recover(vlm_targets, ocr_entries, pdf_path).items():
+                flat_human[p] = val
+                vlm_paths.add(p)
+                state_override.pop(p, None)
+
     for p, f in metas:
         if f["coded"] or flat_human[p] == "NOT_FOUND":
             continue
@@ -394,7 +423,7 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
             conf, low = None, False
         elif f.get("answer_field"):
             conf, low = None, found
-        elif (p in anchor_paths or p in omr_paths) and found:
+        elif (p in anchor_paths or p in omr_paths or p in vlm_paths) and found:
             conf, low = None, True
         else:
             conf = _confidence(human, ocr_entries) if found else None
@@ -404,12 +433,15 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
             note = "recovered via anchor — verify"
         if p in omr_paths and found and not note:
             note = "checkbox detected — verify"
+        if p in vlm_paths and found and not note:
+            note = "vlm-located — verify"
+        state = "found" if found else state_override.get(p, "no_output")
         item = {
             "path": p,
             "label": f["label"],
             "section": f["section"],
             "coded": f["coded"],
-            "state": "found" if found else "no_output",
+            "state": state,
             "display": human if found else "",
             "value": decoded[p] if found else "",
             "confidence": conf,

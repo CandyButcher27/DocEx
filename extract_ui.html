@@ -35,6 +35,8 @@
   td.val input, td.val select { width: 100%; padding: 7px 9px; border-radius: 6px; border: 1px solid #2a2f3d; background: #10131c; color: var(--text); font-size: 13px; }
   tr.low td.val input, tr.low td.val select { background: #43400f; border-color: #d8c65a; color: #fff5c2; }
   tr.noout td.val input { border-style: dashed; color: var(--muted); }
+  tr.blankrow td.val input { border-color: #232838; color: var(--muted); opacity: 0.6; }
+  .conf.blank { color: #6b7180; }
   .conf { font-size: 12px; color: var(--muted); white-space: nowrap; }
   .conf.low { color: #e6c04f; font-weight: 700; }
   .conf.noout { color: #e05c5c; }
@@ -185,6 +187,7 @@ function renderTable() {
     const tr = document.createElement('tr');
     if (f.low) tr.className = 'low';
     else if (f.state === 'no_output') tr.className = 'noout';
+    else if (f.state === 'blank') tr.className = 'blankrow';
 
     const tdF = document.createElement('td');
     tdF.innerHTML = `<div class="lbl">${f.label}</div><div class="path">${f.path}</div>`;
@@ -213,23 +216,24 @@ function renderTable() {
     } else {
       input = document.createElement('input');
       input.type = 'text';
-      input.value = f.state === 'no_output' ? '' : f.value;
-      input.placeholder = 'NO OUTPUT';
+      input.value = (f.state === 'no_output' || f.state === 'blank') ? '' : f.value;
+      input.placeholder = f.state === 'blank' ? 'blank on form' : 'NO OUTPUT';
     }
     input.addEventListener('input', () => {
       f.value = input.value;
-      tr.classList.remove('low', 'noout');
+      tr.classList.remove('low', 'noout', 'blankrow');
       refreshJson();
     });
     input.addEventListener('change', () => {
       f.value = input.value;
-      tr.classList.remove('low', 'noout');
+      tr.classList.remove('low', 'noout', 'blankrow');
       refreshJson();
     });
     tdV.appendChild(input);
 
     const tdC = document.createElement('td');
-    if (f.state === 'no_output') tdC.innerHTML = `<span class="conf noout">${f.note ? f.note : 'NO OUTPUT'}</span>`;
+    if (f.state === 'blank') tdC.innerHTML = '<span class="conf blank">BLANK</span>';
+    else if (f.state === 'no_output') tdC.innerHTML = `<span class="conf noout">${f.note ? f.note : 'NO OUTPUT'}</span>`;
     else if (f.confidence === null) tdC.innerHTML = '<span class="conf low">unverified</span>';
     else {
       const pct = Math.round(f.confidence * 100);
