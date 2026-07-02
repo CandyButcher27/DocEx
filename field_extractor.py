@@ -7,8 +7,8 @@ from llm_client import run_extraction
 from validators import validate
 
 ROOT = Path(__file__).parent
-SPEC_FILE = ROOT / "field_spec.json"
-CODE_MAPPER_FILE = ROOT / "code_mapper.json"
+SPEC_FILE = ROOT / "data" / "field_spec.json"
+CODE_MAPPER_FILE = ROOT / "data" / "code_mapper.json"
 
 _spec = None
 _mapper = None

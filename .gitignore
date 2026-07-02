@@ -35,13 +35,13 @@ graphify-out/
 me/
 scanned_docs/
 
-# Test/debug artifacts and OCR caches
+# Test/debug artifacts, OCR caches, scratch fixtures
 *.log
 *.ocrcache.json
 test_output.json
-onepage.pdf
+scratch/
 _view/
-crop_test.py
+tools/crop_test.py
 
 # Source schema workbook (internal)
 *.xlsx

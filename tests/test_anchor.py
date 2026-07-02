@@ -3,6 +3,8 @@ import os
 import sys
 import time
 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from ocr_engine import run_ocr_on_pdf
 from field_extractor import extract
 
