@@ -16,6 +16,7 @@ STORE_FILE = os.path.join(ROOT, "data", "template_store.json")
 BLUR_THRESH = 100.0        # variance-of-Laplacian below this = too blurred
 MATCH_THRESH = 0.25        # doc-level best cosine below this = unrecognized form
 BLUR_MAX_SIDE = 1500       # downscale long side before sharpness measure (resolution-normalize)
+UNMATCHED_SLACK = 2        # max no-template pages tolerated (premium/benefit page(s)); more = stuffed doc
 
 # DOB deferred: insured date_of_birth is absent from the source schema (field_spec) so the
 # pipeline can't extract it yet. Add insured_details.date_of_birth to the spec to re-enable.
@@ -75,6 +76,22 @@ def match_template(page_texts, store=None):
     return {"doc_kind": best["kind"], "doc_score": best["score"], "pages": per_page}
 
 
+def check_pagecount(match, store=None):
+    store = store or load_store()
+    n_pages = {d["name"]: d["n_pages"] for d in store["docs"]}
+    per_kind = Counter()
+    unmatched = 0
+    for p in match["pages"]:
+        if p["score"] >= MATCH_THRESH:
+            per_kind[p["kind"]] += 1
+        else:
+            unmatched += 1
+    over = [k for k, c in per_kind.items() if c > n_pages.get(k, 0)]
+    budget = {k: n_pages.get(k, 0) for k in per_kind}
+    ok = not over and unmatched <= UNMATCHED_SLACK
+    return ok, {"per_kind": dict(per_kind), "budget": budget, "unmatched": unmatched}
+
+
 def _sharpness(pil_img):
     g = np.array(pil_img.convert("L"))
     h, w = g.shape
@@ -118,6 +135,11 @@ def check(pdf_path, ocr_entries=None):
     if match["doc_score"] < MATCH_THRESH:
         return {"ok": False, "reason": "unrecognized form — does not match any known template", "detail": detail, "ocr": ocr_entries}
 
+    ok, pc = check_pagecount(match)
+    detail["pagecount"] = pc
+    if not ok:
+        return {"ok": False, "reason": "looks like multiple documents merged — please split and reupload", "detail": detail, "ocr": ocr_entries}
+
     return {"ok": True, "reason": None, "detail": detail, "ocr": ocr_entries}
 
 
@@ -138,7 +160,9 @@ def _calibrate(pdf_glob):
         ocr = run_ocr_on_pdf(path)
         m = match_template(_page_texts(ocr, len(pages)))
         pk = [(p["kind"][:16], round(p["score"], 3)) for p in m["pages"]]
+        ok_pc, pc = check_pagecount(m, store)
         print(f"{os.path.basename(path):34} sh_min={min(sh):8.1f}  {m['doc_kind'][:20]:22} {m['doc_score']:.3f}  {pk}")
+        print(f"{'':34} pagecount ok={ok_pc}  per_kind={pc['per_kind']} budget={pc['budget']} unmatched={pc['unmatched']}")
 
 
 if __name__ == "__main__":
