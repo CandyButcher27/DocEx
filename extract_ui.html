@@ -50,6 +50,19 @@
 <h1>Document Field Extractor</h1>
 
 <div class="card">
+  <strong>Templates</strong>
+  <div style="color:var(--muted); font-size:12px; margin:4px 0 12px;">Upload the clean form(s) as .docx — they're embedded automatically and used to recognize scans.</div>
+  <div class="row">
+    <label id="tplLabel" style="display:inline-block; padding:10px 18px; border-radius:8px; background:#2a2f3d; cursor:pointer;">
+      Choose .docx (multiple)
+      <input type="file" id="tplInput" accept=".docx" multiple style="display:none">
+    </label>
+    <span id="tplStatus" style="color:var(--muted); font-size:13px;">Loading…</span>
+  </div>
+  <div id="tplList" style="font-size:13px; margin-top:10px;"></div>
+</div>
+
+<div class="card">
   <div class="row">
     <label id="fileLabel">
       Choose PDF or image
@@ -107,8 +120,42 @@ const jsonCard = document.getElementById('jsonCard');
 const resultsBody = document.getElementById('resultsBody');
 const jsonBox = document.getElementById('jsonBox');
 
+const tplInput = document.getElementById('tplInput');
+const tplStatus = document.getElementById('tplStatus');
+const tplList = document.getElementById('tplList');
+
 let docId = null;
 let fieldsData = [];
+
+function renderTemplates(names) {
+  tplList.innerHTML = names.length
+    ? names.map(n => `<div>• ${n}</div>`).join('')
+    : '<span style="color:var(--muted)">No templates yet — upload a .docx.</span>';
+}
+
+async function loadTemplates() {
+  try {
+    const data = await (await fetch('/templates')).json();
+    renderTemplates(data.templates || []);
+    tplStatus.textContent = (data.templates || []).length + ' embedded';
+  } catch { tplStatus.textContent = ''; }
+}
+
+tplInput.addEventListener('change', async () => {
+  if (!tplInput.files.length) return;
+  tplStatus.textContent = 'Embedding ' + tplInput.files.length + ' file(s)… (converting via Word, may take a moment)';
+  const fd = new FormData();
+  for (const f of tplInput.files) fd.append('templates', f);
+  try {
+    const data = await (await fetch('/upload_template', { method: 'POST', body: fd })).json();
+    if (data.error) { tplStatus.textContent = 'Error: ' + data.error; return; }
+    renderTemplates(data.templates || []);
+    tplStatus.textContent = 'Added: ' + (data.added || []).join(', ');
+  } catch (e) { tplStatus.textContent = 'Error: ' + e.message; }
+  tplInput.value = '';
+});
+
+loadTemplates();
 
 function setStatus(m) { status.textContent = m; }
 function setStep(id, s) { const e = document.getElementById(id); e.classList.remove('active','done'); if (s) e.classList.add(s); }

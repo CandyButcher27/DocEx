@@ -12,6 +12,7 @@ from ocr_engine import UPLOADS, run_ocr_on_pdf
 from llm_client import run_extraction
 from field_extractor import extract as extract_template
 import ingest_gate
+import build_template_store
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 HTML_FILE = os.path.join(ROOT, "extract_ui.html")
@@ -37,11 +38,55 @@ def parse_multipart(body, boundary):
     return None, None
 
 
+def parse_multipart_all(body, boundary):
+    files = []
+    for part in body.split(b"--" + boundary):
+        if b"Content-Disposition" not in part:
+            continue
+        header_end = part.find(b"\r\n\r\n")
+        if header_end == -1:
+            continue
+        headers = part[:header_end].decode("utf-8", errors="replace")
+        content = part[header_end + 4:]
+        if content.endswith(b"\r\n"):
+            content = content[:-2]
+        m = re.search(r'filename="([^"]*)"', headers)
+        if m and m.group(1):
+            files.append((m.group(1), content))
+    return files
+
+
 def image_bytes_to_pdf_bytes(image_bytes):
     img = Image.open(BytesIO(image_bytes)).convert("RGB")
     out = BytesIO()
     img.save(out, format="PDF")
     return out.getvalue()
+
+
+def current_templates():
+    import glob
+    return sorted(
+        os.path.splitext(os.path.basename(p))[0]
+        for p in glob.glob(os.path.join(build_template_store.DOCS_DIR, "*.docx"))
+    )
+
+
+def add_templates(docx_files):
+    from docx2pdf import convert
+
+    os.makedirs(build_template_store.DOCS_DIR, exist_ok=True)
+    os.makedirs(build_template_store.PDF_DIR, exist_ok=True)
+    added = []
+    for filename, content in docx_files:
+        stem = os.path.splitext(os.path.basename(filename))[0]
+        docx_path = os.path.join(build_template_store.DOCS_DIR, stem + ".docx")
+        with open(docx_path, "wb") as f:
+            f.write(content)
+        convert(docx_path, os.path.join(build_template_store.PDF_DIR, stem + ".pdf"))
+        added.append(stem)
+    build_template_store.build()
+    ingest_gate._store = None
+    return added
 
 
 EXTRACTION_PROMPT = """You are a document field extractor. You are given OCR output from a scanned form as JSON \
@@ -87,10 +132,30 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(body)
             return
+        if parsed.path == "/templates":
+            self._send_json({"templates": current_templates()})
+            return
         self.send_error(404)
 
     def do_POST(self):
         parsed = urlparse(self.path)
+
+        if parsed.path == "/upload_template":
+            content_type = self.headers["Content-Type"]
+            boundary = re.search(r"boundary=(.+)", content_type).group(1).encode()
+            length = int(self.headers["Content-Length"])
+            files = parse_multipart_all(self.rfile.read(length), boundary)
+            docx = [(n, c) for n, c in files if n.lower().endswith(".docx")]
+            if not docx:
+                self._send_json({"error": "no .docx files found"}, 400)
+                return
+            try:
+                added = add_templates(docx)
+            except Exception as e:
+                self._send_json({"error": f"embedding failed: {e}"}, 500)
+                return
+            self._send_json({"added": added, "templates": current_templates()})
+            return
 
         if parsed.path == "/upload":
             content_type = self.headers["Content-Type"]
