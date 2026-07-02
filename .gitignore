@@ -34,3 +34,13 @@ gpt_chats/
 graphify-out/
 me/
 scanned_docs/
+
+# Test/debug artifacts and OCR caches
+*.log
+*.ocrcache.json
+test_output.json
+_view/
+crop_test.py
+
+# Source schema workbook (internal)
+*.xlsx

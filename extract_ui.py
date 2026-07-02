@@ -6,35 +6,16 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from io import BytesIO
 from urllib.parse import urlparse
 
-from pdf2image import convert_from_path
-from paddleocr import PaddleOCR
 from PIL import Image
 
+from ocr_engine import UPLOADS, run_ocr_on_pdf
 from llm_client import run_extraction
+from field_extractor import extract as extract_template
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-UPLOADS = os.path.join(ROOT, "uploads")
 HTML_FILE = os.path.join(ROOT, "extract_ui.html")
-DPI = 150
-
-os.makedirs(UPLOADS, exist_ok=True)
 
 DOCS = {}  # doc_id -> {"pdf_path": str, "filename": str, "ocr": list | None}
-
-_ocr_engine = None
-
-
-def get_ocr():
-    global _ocr_engine
-    if _ocr_engine is None:
-        _ocr_engine = PaddleOCR(
-            use_doc_orientation_classify=False,
-            use_doc_unwarping=False,
-            use_textline_orientation=False,
-            enable_mkldnn=False,
-            lang="en",
-        )
-    return _ocr_engine
 
 
 def parse_multipart(body, boundary):
@@ -60,36 +41,6 @@ def image_bytes_to_pdf_bytes(image_bytes):
     out = BytesIO()
     img.save(out, format="PDF")
     return out.getvalue()
-
-
-def run_ocr_on_pdf(pdf_path):
-    ocr = get_ocr()
-    pages = convert_from_path(pdf_path, dpi=DPI)
-    entries = []
-    for page_idx, image in enumerate(pages):
-        width, height = image.size
-        buf = BytesIO()
-        image.save(buf, format="PNG")
-        tmp_path = os.path.join(UPLOADS, f"_page_{uuid.uuid4().hex}.png")
-        image.save(tmp_path)
-        try:
-            pred = ocr.predict(tmp_path)[0]
-        finally:
-            os.remove(tmp_path)
-        texts = pred["rec_texts"]
-        scores = pred["rec_scores"]
-        boxes = pred["rec_boxes"]
-        for text, score, box in zip(texts, scores, boxes):
-            x0, y0, x1, y1 = [int(v) for v in box]
-            entries.append({
-                "page": page_idx,
-                "text": text,
-                "confidence": round(float(score), 4),
-                "bbox": [x0, y0, x1, y1],
-                "page_width": width,
-                "page_height": height,
-            })
-    return entries
 
 
 EXTRACTION_PROMPT = """You are a document field extractor. You are given OCR output from a scanned form as JSON \
@@ -187,6 +138,18 @@ class Handler(BaseHTTPRequestHandler):
                 return
             results = run_llm_extraction(doc["ocr"], fields)
             self._send_json({"results": results})
+            return
+
+        if parsed.path == "/run_template":
+            length = int(self.headers["Content-Length"])
+            data = json.loads(self.rfile.read(length))
+            doc_id = data["doc_id"]
+            doc = DOCS.get(doc_id)
+            if not doc or doc["ocr"] is None:
+                self._send_json({"error": "run /run_ocr first"}, 400)
+                return
+            result = extract_template(doc["ocr"], pdf_path=doc["pdf_path"])
+            self._send_json(result)
             return
 
         self.send_error(404)

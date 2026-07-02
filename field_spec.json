@@ -1,0 +1,2057 @@
+{
+  "source": "GSS-SchemaSummary-V3(Mar-30) 2.xlsx",
+  "template_shape": "template.json",
+  "not_found_token": "NOT_FOUND",
+  "fields": [
+    {
+      "path": "loan_details.loan_account_number",
+      "label": "Loan Account Number",
+      "section": "Loan Details",
+      "type": "Alpha Numeric (30)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "loan_details.loan_disbursement_date",
+      "label": "Loan Disbursement Date",
+      "section": "Loan Details",
+      "type": "Date",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "loan_details.loanAppNumber",
+      "label": "Loan Application Number",
+      "section": "Loan Details",
+      "type": "Alpha Numeric (30)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "loan_details.insurancePeriod_months",
+      "label": "Insurance Period Months",
+      "section": "Loan Details",
+      "type": "Numeric(3)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "loan_details.loanTenure_months",
+      "label": "Loan Tenure (in months)",
+      "section": "Loan Details",
+      "type": "360",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "loan_details.loanAmount",
+      "label": "Loan Amount",
+      "section": "Loan Details",
+      "type": "9905600",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.first_name",
+      "label": "First Name",
+      "section": "Insured Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.middle_name",
+      "label": "Middle Name",
+      "section": "Insured Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.last_name",
+      "label": "Last Name",
+      "section": "Insured Details",
+      "type": "Varchar(60)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.email_id",
+      "label": "Email ID",
+      "section": "Insured Details",
+      "type": "Varchar(50)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.sector",
+      "label": "Sector",
+      "section": "Insured Details",
+      "type": "Enum(50)",
+      "coded": true,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.education",
+      "label": "Educational Qualification",
+      "section": "Insured Details",
+      "type": "Enum(50)",
+      "coded": true,
+      "repeat_group": null,
+      "allowed_values": [
+        "Illiterate",
+        "Primary School",
+        "High School/Secondary",
+        "Graduate",
+        "Postgraduate",
+        "Diploma"
+      ],
+      "options": [
+        {
+          "text": "Illiterate",
+          "value": "EO001"
+        },
+        {
+          "text": "Primary School",
+          "value": "EO002"
+        },
+        {
+          "text": "High School/Secondary",
+          "value": "EO003"
+        },
+        {
+          "text": "Graduate",
+          "value": "EO004"
+        },
+        {
+          "text": "Postgraduate",
+          "value": "EO005"
+        },
+        {
+          "text": "Diploma",
+          "value": "EO006"
+        }
+      ]
+    },
+    {
+      "path": "insured_details.height_cm",
+      "label": "Height",
+      "section": "Insured Details",
+      "type": null,
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.weight_kg",
+      "label": "Weight",
+      "section": "Insured Details",
+      "type": null,
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.maritalStatus",
+      "label": "Marital Status",
+      "section": "Insured Details",
+      "type": "Enum(30)",
+      "coded": true,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.pan_number",
+      "label": "PAN Number",
+      "section": "Insured Details",
+      "type": "Varchar(10)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.abha_number",
+      "label": "ABHA Number",
+      "section": "Insured Details",
+      "type": "Free text",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.occupation",
+      "label": "Occupation Of The Insured Person",
+      "section": "Insured Details",
+      "type": "Enum(50)",
+      "coded": true,
+      "repeat_group": null,
+      "allowed_values": [
+        "Salaried/Professional",
+        "Self-employed",
+        "Self-employed from Home",
+        "Agriculture",
+        "Retired",
+        "Student",
+        "Housewife",
+        "Others"
+      ],
+      "options": [
+        {
+          "text": "Salaried/Professional",
+          "value": "OC001"
+        },
+        {
+          "text": "Self-employed",
+          "value": "OC002"
+        },
+        {
+          "text": "Self-employed from Home",
+          "value": "OC003"
+        },
+        {
+          "text": "Agriculture",
+          "value": "OC004"
+        },
+        {
+          "text": "Retired",
+          "value": "OC005"
+        },
+        {
+          "text": "Student",
+          "value": "OC006"
+        },
+        {
+          "text": "Housewife",
+          "value": "OC007"
+        },
+        {
+          "text": "Others",
+          "value": "OC008"
+        }
+      ]
+    },
+    {
+      "path": "insured_details.nationality",
+      "label": "Nationality Of The Insured Person",
+      "section": "Insured Details",
+      "type": "Varchar(25)",
+      "coded": true,
+      "repeat_group": null,
+      "allowed_values": [
+        "Indian",
+        "Non-Resident Indian",
+        "OCI/PIO",
+        "Others"
+      ],
+      "options": [
+        {
+          "text": "Indian",
+          "value": "NO001"
+        },
+        {
+          "text": "Non-Resident Indian",
+          "value": "NO002"
+        },
+        {
+          "text": "OCI/PIO",
+          "value": "NO003"
+        },
+        {
+          "text": "Others",
+          "value": "NO004"
+        }
+      ]
+    },
+    {
+      "path": "insured_details.annual_income",
+      "label": "Annual Income",
+      "section": "Insured Details",
+      "type": "Numeric(11)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.share_in_loan",
+      "label": "Percentage Share In LOA",
+      "section": "Insured Details",
+      "type": "Drop Down",
+      "coded": true,
+      "repeat_group": null,
+      "allowed_values": [
+        ">=50%",
+        "<50%",
+        "Nil"
+      ],
+      "options": [
+        {
+          "text": ">=50%",
+          "value": "SLO001"
+        },
+        {
+          "text": "<50%",
+          "value": "SLO002"
+        },
+        {
+          "text": "Nil",
+          "value": "SLO003"
+        }
+      ]
+    },
+    {
+      "path": "insured_details.pan_available",
+      "label": "Pan Available Flag",
+      "section": "Insured Details",
+      "type": "Boolen(3)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.form60_available",
+      "label": "Form 60 Available",
+      "section": "Insured Details",
+      "type": "Boolen(3)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.memberClassification",
+      "label": "Member Classification",
+      "section": "Insured Details",
+      "type": null,
+      "coded": true,
+      "repeat_group": null
+    },
+    {
+      "path": "proposer_details.first_name",
+      "label": "First Name",
+      "section": "Proposer Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "proposer_details.middle_name",
+      "label": "Middle Name",
+      "section": "Proposer Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "proposer_details.last_name",
+      "label": "Last Name",
+      "section": "Proposer Details",
+      "type": "Varchar(60)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "proposer_details.gender",
+      "label": "Gender",
+      "section": "Proposer Details",
+      "type": "Enum(15)",
+      "coded": true,
+      "repeat_group": null,
+      "allowed_values": [
+        "Male",
+        "Female",
+        "Transgender"
+      ],
+      "options": [
+        {
+          "text": "Male",
+          "value": "G001"
+        },
+        {
+          "text": "Female",
+          "value": "G002"
+        },
+        {
+          "text": "Transgender",
+          "value": "G003"
+        }
+      ]
+    },
+    {
+      "path": "proposer_details.date_of_birth",
+      "label": "Date of Birth",
+      "section": "Proposer Details",
+      "type": "Varchar(15)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "proposer_details.relationship_with_insured",
+      "label": "Relationship with Insured",
+      "section": "Proposer Details",
+      "type": "Varchar",
+      "coded": true,
+      "repeat_group": null,
+      "allowed_values": [
+        "Spouse",
+        "Son",
+        "Daughter",
+        "Father",
+        "Mother",
+        "Brother",
+        "Sister",
+        "Father-in-law",
+        "Mother-in-law",
+        "Grand Father",
+        "Grand Mother",
+        "Grand Son",
+        "Grand Daughter",
+        "Other"
+      ],
+      "options": [
+        {
+          "text": "Spouse",
+          "value": "R001"
+        },
+        {
+          "text": "Son",
+          "value": "R002"
+        },
+        {
+          "text": "Daughter",
+          "value": "R003"
+        },
+        {
+          "text": "Father",
+          "value": "R004"
+        },
+        {
+          "text": "Mother",
+          "value": "R005"
+        },
+        {
+          "text": "Brother",
+          "value": "R006"
+        },
+        {
+          "text": "Sister",
+          "value": "R007"
+        },
+        {
+          "text": "Father-in-law",
+          "value": "R008"
+        },
+        {
+          "text": "Mother-in-law",
+          "value": "R009"
+        },
+        {
+          "text": "Grand Father",
+          "value": "R010"
+        },
+        {
+          "text": "Grand Mother",
+          "value": "R011"
+        },
+        {
+          "text": "Grand Son",
+          "value": "R012"
+        },
+        {
+          "text": "Grand Daughter",
+          "value": "R013"
+        },
+        {
+          "text": "Other",
+          "value": "R014"
+        }
+      ]
+    },
+    {
+      "path": "address_details[0].type",
+      "label": "Type",
+      "section": "Address Details",
+      "type": null,
+      "coded": true,
+      "repeat_group": "address_details",
+      "allowed_values": [
+        "Communication",
+        "Permanent",
+        "Office",
+        "Other"
+      ],
+      "options": [
+        {
+          "text": "Communication",
+          "value": "AD001"
+        },
+        {
+          "text": "Permanent",
+          "value": "AD002"
+        },
+        {
+          "text": "Office",
+          "value": "AD003"
+        },
+        {
+          "text": "Other",
+          "value": "AD004"
+        }
+      ]
+    },
+    {
+      "path": "address_details[0].address_line_1",
+      "label": "Address Line 1",
+      "section": "Address Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "address_details"
+    },
+    {
+      "path": "address_details[0].address_line_2",
+      "label": "Address Line 2",
+      "section": "Address Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "address_details"
+    },
+    {
+      "path": "address_details[0].address_line_3",
+      "label": "Address Line 3",
+      "section": "Address Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "address_details"
+    },
+    {
+      "path": "address_details[0].pin",
+      "label": "Pin",
+      "section": "Address Details",
+      "type": "Numeric(6)",
+      "coded": false,
+      "repeat_group": "address_details"
+    },
+    {
+      "path": "address_details[0].city",
+      "label": "City",
+      "section": "Address Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "address_details"
+    },
+    {
+      "path": "address_details[0].state",
+      "label": "State",
+      "section": "Address Details",
+      "type": "Varchar(30)",
+      "coded": true,
+      "repeat_group": "address_details",
+      "allowed_values": [
+        "Andhra Pradesh",
+        "Arunachal Pradesh",
+        "Assam",
+        "Bihar",
+        "Chhattisgarh",
+        "Goa",
+        "Gujarat",
+        "Haryana",
+        "Himachal Pradesh",
+        "Jharkhand",
+        "Karnataka",
+        "Kerala",
+        "Madhya Pradesh",
+        "Maharashtra",
+        "Manipur",
+        "Meghalaya",
+        "Mizoram",
+        "Nagaland",
+        "Odisha",
+        "Punjab",
+        "Rajasthan",
+        "Sikkim",
+        "Tamil Nadu",
+        "Telangana",
+        "Tripura",
+        "Uttar Pradesh",
+        "Uttarakhand",
+        "West Bengal",
+        "Delhi",
+        "Jammu and Kashmir",
+        "Ladakh",
+        "Puducherry"
+      ],
+      "options": [
+        {
+          "text": "Andhra Pradesh",
+          "value": "Andhra Pradesh"
+        },
+        {
+          "text": "Arunachal Pradesh",
+          "value": "Arunachal Pradesh"
+        },
+        {
+          "text": "Assam",
+          "value": "Assam"
+        },
+        {
+          "text": "Bihar",
+          "value": "Bihar"
+        },
+        {
+          "text": "Chhattisgarh",
+          "value": "Chhattisgarh"
+        },
+        {
+          "text": "Goa",
+          "value": "Goa"
+        },
+        {
+          "text": "Gujarat",
+          "value": "Gujarat"
+        },
+        {
+          "text": "Haryana",
+          "value": "Haryana"
+        },
+        {
+          "text": "Himachal Pradesh",
+          "value": "Himachal Pradesh"
+        },
+        {
+          "text": "Jharkhand",
+          "value": "Jharkhand"
+        },
+        {
+          "text": "Karnataka",
+          "value": "Karnataka"
+        },
+        {
+          "text": "Kerala",
+          "value": "Kerala"
+        },
+        {
+          "text": "Madhya Pradesh",
+          "value": "Madhya Pradesh"
+        },
+        {
+          "text": "Maharashtra",
+          "value": "Maharashtra"
+        },
+        {
+          "text": "Manipur",
+          "value": "Manipur"
+        },
+        {
+          "text": "Meghalaya",
+          "value": "Meghalaya"
+        },
+        {
+          "text": "Mizoram",
+          "value": "Mizoram"
+        },
+        {
+          "text": "Nagaland",
+          "value": "Nagaland"
+        },
+        {
+          "text": "Odisha",
+          "value": "Odisha"
+        },
+        {
+          "text": "Punjab",
+          "value": "Punjab"
+        },
+        {
+          "text": "Rajasthan",
+          "value": "Rajasthan"
+        },
+        {
+          "text": "Sikkim",
+          "value": "Sikkim"
+        },
+        {
+          "text": "Tamil Nadu",
+          "value": "Tamil Nadu"
+        },
+        {
+          "text": "Telangana",
+          "value": "Telangana"
+        },
+        {
+          "text": "Tripura",
+          "value": "Tripura"
+        },
+        {
+          "text": "Uttar Pradesh",
+          "value": "Uttar Pradesh"
+        },
+        {
+          "text": "Uttarakhand",
+          "value": "Uttarakhand"
+        },
+        {
+          "text": "West Bengal",
+          "value": "West Bengal"
+        },
+        {
+          "text": "Delhi",
+          "value": "Delhi"
+        },
+        {
+          "text": "Jammu and Kashmir",
+          "value": "Jammu and Kashmir"
+        },
+        {
+          "text": "Ladakh",
+          "value": "Ladakh"
+        },
+        {
+          "text": "Puducherry",
+          "value": "Puducherry"
+        }
+      ]
+    },
+    {
+      "path": "address_details[0].same_as_communication",
+      "label": "Same as Communication Address",
+      "section": "Address Details",
+      "type": null,
+      "coded": false,
+      "repeat_group": "address_details"
+    },
+    {
+      "path": "nominee_details[0].id",
+      "label": "ID",
+      "section": "Nominee Details",
+      "type": null,
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].first_name",
+      "label": "First Name",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].middle_name",
+      "label": "Middle Name",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].last_name",
+      "label": "Last Name",
+      "section": "Nominee Details",
+      "type": "Varchar(60)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].gender",
+      "label": "Gender",
+      "section": "Nominee Details",
+      "type": "Enum(15)",
+      "coded": true,
+      "repeat_group": "nominee_details",
+      "allowed_values": [
+        "Male",
+        "Female",
+        "Transgender"
+      ],
+      "options": [
+        {
+          "text": "Male",
+          "value": "G001"
+        },
+        {
+          "text": "Female",
+          "value": "G002"
+        },
+        {
+          "text": "Transgender",
+          "value": "G003"
+        }
+      ]
+    },
+    {
+      "path": "nominee_details[0].date_of_birth",
+      "label": "Date of Birth",
+      "section": "Nominee Details",
+      "type": "Date",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].mobile_country_code",
+      "label": "Mobile Country Code",
+      "section": "Nominee Details",
+      "type": null,
+      "coded": true,
+      "repeat_group": "nominee_details",
+      "allowed_values": [
+        "+91",
+        "+1",
+        "+44",
+        "+61",
+        "+971",
+        "+966",
+        "+65",
+        "+60",
+        "+62",
+        "+63",
+        "+66",
+        "+81",
+        "+82",
+        "+86",
+        "+852",
+        "+49",
+        "+33",
+        "+39",
+        "+34",
+        "+31",
+        "+41",
+        "+46",
+        "+47",
+        "+45",
+        "+353",
+        "+7",
+        "+55",
+        "+52",
+        "+27",
+        "+64",
+        "+94",
+        "+880",
+        "+977",
+        "+92",
+        "+93"
+      ],
+      "options": [
+        {
+          "text": "+91",
+          "value": "+91"
+        },
+        {
+          "text": "+1",
+          "value": "+1"
+        },
+        {
+          "text": "+44",
+          "value": "+44"
+        },
+        {
+          "text": "+61",
+          "value": "+61"
+        },
+        {
+          "text": "+971",
+          "value": "+971"
+        },
+        {
+          "text": "+966",
+          "value": "+966"
+        },
+        {
+          "text": "+65",
+          "value": "+65"
+        },
+        {
+          "text": "+60",
+          "value": "+60"
+        },
+        {
+          "text": "+62",
+          "value": "+62"
+        },
+        {
+          "text": "+63",
+          "value": "+63"
+        },
+        {
+          "text": "+66",
+          "value": "+66"
+        },
+        {
+          "text": "+81",
+          "value": "+81"
+        },
+        {
+          "text": "+82",
+          "value": "+82"
+        },
+        {
+          "text": "+86",
+          "value": "+86"
+        },
+        {
+          "text": "+852",
+          "value": "+852"
+        },
+        {
+          "text": "+49",
+          "value": "+49"
+        },
+        {
+          "text": "+33",
+          "value": "+33"
+        },
+        {
+          "text": "+39",
+          "value": "+39"
+        },
+        {
+          "text": "+34",
+          "value": "+34"
+        },
+        {
+          "text": "+31",
+          "value": "+31"
+        },
+        {
+          "text": "+41",
+          "value": "+41"
+        },
+        {
+          "text": "+46",
+          "value": "+46"
+        },
+        {
+          "text": "+47",
+          "value": "+47"
+        },
+        {
+          "text": "+45",
+          "value": "+45"
+        },
+        {
+          "text": "+353",
+          "value": "+353"
+        },
+        {
+          "text": "+7",
+          "value": "+7"
+        },
+        {
+          "text": "+55",
+          "value": "+55"
+        },
+        {
+          "text": "+52",
+          "value": "+52"
+        },
+        {
+          "text": "+27",
+          "value": "+27"
+        },
+        {
+          "text": "+64",
+          "value": "+64"
+        },
+        {
+          "text": "+94",
+          "value": "+94"
+        },
+        {
+          "text": "+880",
+          "value": "+880"
+        },
+        {
+          "text": "+977",
+          "value": "+977"
+        },
+        {
+          "text": "+92",
+          "value": "+92"
+        },
+        {
+          "text": "+93",
+          "value": "+93"
+        }
+      ]
+    },
+    {
+      "path": "nominee_details[0].mobile_no",
+      "label": "Mobile Number",
+      "section": "Nominee Details",
+      "type": "Numeric(10)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].email_id",
+      "label": "Email ID",
+      "section": "Nominee Details",
+      "type": "Varchar(50)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].address_line_1",
+      "label": "Address Line 1",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].address_line_2",
+      "label": "Address Line 2",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].address_line_3",
+      "label": "Address Line 3",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].pin_code",
+      "label": "Pin",
+      "section": "Nominee Details",
+      "type": "Numeric(6)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].city",
+      "label": "City",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].state",
+      "label": "State",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
+      "coded": true,
+      "repeat_group": "nominee_details",
+      "allowed_values": [
+        "Andhra Pradesh",
+        "Arunachal Pradesh",
+        "Assam",
+        "Bihar",
+        "Chhattisgarh",
+        "Goa",
+        "Gujarat",
+        "Haryana",
+        "Himachal Pradesh",
+        "Jharkhand",
+        "Karnataka",
+        "Kerala",
+        "Madhya Pradesh",
+        "Maharashtra",
+        "Manipur",
+        "Meghalaya",
+        "Mizoram",
+        "Nagaland",
+        "Odisha",
+        "Punjab",
+        "Rajasthan",
+        "Sikkim",
+        "Tamil Nadu",
+        "Telangana",
+        "Tripura",
+        "Uttar Pradesh",
+        "Uttarakhand",
+        "West Bengal",
+        "Delhi",
+        "Jammu and Kashmir",
+        "Ladakh",
+        "Puducherry"
+      ],
+      "options": [
+        {
+          "text": "Andhra Pradesh",
+          "value": "Andhra Pradesh"
+        },
+        {
+          "text": "Arunachal Pradesh",
+          "value": "Arunachal Pradesh"
+        },
+        {
+          "text": "Assam",
+          "value": "Assam"
+        },
+        {
+          "text": "Bihar",
+          "value": "Bihar"
+        },
+        {
+          "text": "Chhattisgarh",
+          "value": "Chhattisgarh"
+        },
+        {
+          "text": "Goa",
+          "value": "Goa"
+        },
+        {
+          "text": "Gujarat",
+          "value": "Gujarat"
+        },
+        {
+          "text": "Haryana",
+          "value": "Haryana"
+        },
+        {
+          "text": "Himachal Pradesh",
+          "value": "Himachal Pradesh"
+        },
+        {
+          "text": "Jharkhand",
+          "value": "Jharkhand"
+        },
+        {
+          "text": "Karnataka",
+          "value": "Karnataka"
+        },
+        {
+          "text": "Kerala",
+          "value": "Kerala"
+        },
+        {
+          "text": "Madhya Pradesh",
+          "value": "Madhya Pradesh"
+        },
+        {
+          "text": "Maharashtra",
+          "value": "Maharashtra"
+        },
+        {
+          "text": "Manipur",
+          "value": "Manipur"
+        },
+        {
+          "text": "Meghalaya",
+          "value": "Meghalaya"
+        },
+        {
+          "text": "Mizoram",
+          "value": "Mizoram"
+        },
+        {
+          "text": "Nagaland",
+          "value": "Nagaland"
+        },
+        {
+          "text": "Odisha",
+          "value": "Odisha"
+        },
+        {
+          "text": "Punjab",
+          "value": "Punjab"
+        },
+        {
+          "text": "Rajasthan",
+          "value": "Rajasthan"
+        },
+        {
+          "text": "Sikkim",
+          "value": "Sikkim"
+        },
+        {
+          "text": "Tamil Nadu",
+          "value": "Tamil Nadu"
+        },
+        {
+          "text": "Telangana",
+          "value": "Telangana"
+        },
+        {
+          "text": "Tripura",
+          "value": "Tripura"
+        },
+        {
+          "text": "Uttar Pradesh",
+          "value": "Uttar Pradesh"
+        },
+        {
+          "text": "Uttarakhand",
+          "value": "Uttarakhand"
+        },
+        {
+          "text": "West Bengal",
+          "value": "West Bengal"
+        },
+        {
+          "text": "Delhi",
+          "value": "Delhi"
+        },
+        {
+          "text": "Jammu and Kashmir",
+          "value": "Jammu and Kashmir"
+        },
+        {
+          "text": "Ladakh",
+          "value": "Ladakh"
+        },
+        {
+          "text": "Puducherry",
+          "value": "Puducherry"
+        }
+      ]
+    },
+    {
+      "path": "nominee_details[0].bank_branch",
+      "label": "Bank Branch",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].account_holder_name",
+      "label": "Account Holder Name",
+      "section": "Nominee Details",
+      "type": "Varchar(60)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].account_number",
+      "label": "Account Number",
+      "section": "Nominee Details",
+      "type": "Numeric(20)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].ifsc_code",
+      "label": "IFSC Code",
+      "section": "Nominee Details",
+      "type": "Alpha Numeric (11)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].relationship_with_life_insured",
+      "label": "Relationship With Life Insured",
+      "section": "Nominee Details",
+      "type": "Enum(30)",
+      "coded": true,
+      "repeat_group": "nominee_details",
+      "allowed_values": [
+        "Spouse",
+        "Son",
+        "Daughter",
+        "Father",
+        "Mother",
+        "Brother",
+        "Sister",
+        "Father-in-law",
+        "Mother-in-law",
+        "Grand Father",
+        "Grand Mother",
+        "Grand Son",
+        "Grand Daughter",
+        "Other"
+      ],
+      "options": [
+        {
+          "text": "Spouse",
+          "value": "R001"
+        },
+        {
+          "text": "Son",
+          "value": "R002"
+        },
+        {
+          "text": "Daughter",
+          "value": "R003"
+        },
+        {
+          "text": "Father",
+          "value": "R004"
+        },
+        {
+          "text": "Mother",
+          "value": "R005"
+        },
+        {
+          "text": "Brother",
+          "value": "R006"
+        },
+        {
+          "text": "Sister",
+          "value": "R007"
+        },
+        {
+          "text": "Father-in-law",
+          "value": "R008"
+        },
+        {
+          "text": "Mother-in-law",
+          "value": "R009"
+        },
+        {
+          "text": "Grand Father",
+          "value": "R010"
+        },
+        {
+          "text": "Grand Mother",
+          "value": "R011"
+        },
+        {
+          "text": "Grand Son",
+          "value": "R012"
+        },
+        {
+          "text": "Grand Daughter",
+          "value": "R013"
+        },
+        {
+          "text": "Other",
+          "value": "R014"
+        }
+      ]
+    },
+    {
+      "path": "nominee_details[0].other_relation",
+      "label": "Other Relation",
+      "section": "Nominee Details",
+      "type": null,
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].percentage_share",
+      "label": "Percentage Share",
+      "section": "Nominee Details",
+      "type": "Numeric(3)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].appointee_first_name",
+      "label": "Appointee First Name",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].appointee_middle_name",
+      "label": "Appointee Middle Name",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].appointee_last_name",
+      "label": "Appointee Last Name",
+      "section": "Nominee Details",
+      "type": "Varchar(60)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].appointee_gender",
+      "label": "Appointee Gender",
+      "section": "Nominee Details",
+      "type": "Enum(15)",
+      "coded": true,
+      "repeat_group": "nominee_details",
+      "allowed_values": [
+        "Male",
+        "Female",
+        "Transgender"
+      ],
+      "options": [
+        {
+          "text": "Male",
+          "value": "G001"
+        },
+        {
+          "text": "Female",
+          "value": "G002"
+        },
+        {
+          "text": "Transgender",
+          "value": "G003"
+        }
+      ]
+    },
+    {
+      "path": "nominee_details[0].appointee_dob",
+      "label": "Appointee Dob",
+      "section": "Nominee Details",
+      "type": "Date",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].appointee_relationship_with_nominee",
+      "label": "Appointee Relationship With Nominee",
+      "section": "Nominee Details",
+      "type": "Enum(30)",
+      "coded": true,
+      "repeat_group": "nominee_details",
+      "allowed_values": [
+        "Spouse",
+        "Son",
+        "Daughter",
+        "Father",
+        "Mother",
+        "Brother",
+        "Sister",
+        "Father-in-law",
+        "Mother-in-law",
+        "Grand Father",
+        "Grand Mother",
+        "Grand Son",
+        "Grand Daughter",
+        "Other"
+      ],
+      "options": [
+        {
+          "text": "Spouse",
+          "value": "R001"
+        },
+        {
+          "text": "Son",
+          "value": "R002"
+        },
+        {
+          "text": "Daughter",
+          "value": "R003"
+        },
+        {
+          "text": "Father",
+          "value": "R004"
+        },
+        {
+          "text": "Mother",
+          "value": "R005"
+        },
+        {
+          "text": "Brother",
+          "value": "R006"
+        },
+        {
+          "text": "Sister",
+          "value": "R007"
+        },
+        {
+          "text": "Father-in-law",
+          "value": "R008"
+        },
+        {
+          "text": "Mother-in-law",
+          "value": "R009"
+        },
+        {
+          "text": "Grand Father",
+          "value": "R010"
+        },
+        {
+          "text": "Grand Mother",
+          "value": "R011"
+        },
+        {
+          "text": "Grand Son",
+          "value": "R012"
+        },
+        {
+          "text": "Grand Daughter",
+          "value": "R013"
+        },
+        {
+          "text": "Other",
+          "value": "R014"
+        }
+      ]
+    },
+    {
+      "path": "declaration[0].code",
+      "label": "Code",
+      "section": "Declaration",
+      "type": null,
+      "coded": false,
+      "repeat_group": "declaration"
+    },
+    {
+      "path": "declaration[0].answer",
+      "label": "Answer",
+      "section": "Declaration",
+      "type": "Boolen(3)",
+      "coded": false,
+      "repeat_group": "declaration"
+    },
+    {
+      "path": "declaration[0].isAnswer",
+      "label": "is Answered",
+      "section": "Declaration",
+      "type": "Free text",
+      "coded": false,
+      "repeat_group": "declaration"
+    },
+    {
+      "path": "mph_section.mph_emp_id",
+      "label": "Employee ID",
+      "section": "MPH Section",
+      "type": "alpha Numeric (20)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "mph_section.mph_branch_code",
+      "label": "Branch Code",
+      "section": "MPH Section",
+      "type": "alpha Numeric (20)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "mph_section.mph_source_code",
+      "label": "Source Code",
+      "section": "MPH Section",
+      "type": "alpha Numeric (20)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "mph_section.mph_branch_location",
+      "label": "Branch",
+      "section": "MPH Section",
+      "type": "Varchar(20)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "mph_section.mli_sales_manager_code",
+      "label": "SM Code",
+      "section": "MPH Section",
+      "type": "alpha Numeric (20)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "mph_section.mli_sales_manager_name",
+      "label": "SM Name",
+      "section": "MPH Section",
+      "type": "Varchar(80)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "mph_section.rm_code",
+      "label": "RM Code",
+      "section": "MPH Section",
+      "type": "Varchar(80)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "mph_section.rm_name",
+      "label": "RM Name",
+      "section": "MPH Section",
+      "type": "alpha Numeric (20)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "mph_section.rac_location",
+      "label": "RAC Location",
+      "section": "MPH Section",
+      "type": "Varchar (20)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "mph_section.seller_code",
+      "label": "Seller Code",
+      "section": "MPH Section",
+      "type": null,
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "mph_section.seller_mobileNumber",
+      "label": "Seller Mobile Number",
+      "section": "MPH Section",
+      "type": null,
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "mph_section.seller_mailID",
+      "label": "Seller Mail ID",
+      "section": "MPH Section",
+      "type": null,
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "disability_declarant.first_name",
+      "label": "First Name",
+      "section": "Disability Declaration",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "disability_declarant.middle_name",
+      "label": "Middle Name",
+      "section": "Disability Declaration",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "disability_declarant.last_name",
+      "label": "Last Name",
+      "section": "Disability Declaration",
+      "type": "Varchar(60)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "disability_declarant.mobile_number",
+      "label": "Mobile Number",
+      "section": "Disability Declaration",
+      "type": "Numeric(10)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "disability_declarant.address",
+      "label": "Declarant Address",
+      "section": "Disability Declaration",
+      "type": "Varchar(100)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "disability_declarant.relationship_with_prospect",
+      "label": "Relationship with Prospect",
+      "section": "Disability Declaration",
+      "type": "Enum(15)",
+      "coded": true,
+      "repeat_group": null,
+      "allowed_values": [
+        "Spouse",
+        "Son",
+        "Daughter",
+        "Father",
+        "Mother",
+        "Brother",
+        "Sister",
+        "Father-in-law",
+        "Mother-in-law",
+        "Grand Father",
+        "Grand Mother",
+        "Grand Son",
+        "Grand Daughter",
+        "Other"
+      ],
+      "options": [
+        {
+          "text": "Spouse",
+          "value": "R001"
+        },
+        {
+          "text": "Son",
+          "value": "R002"
+        },
+        {
+          "text": "Daughter",
+          "value": "R003"
+        },
+        {
+          "text": "Father",
+          "value": "R004"
+        },
+        {
+          "text": "Mother",
+          "value": "R005"
+        },
+        {
+          "text": "Brother",
+          "value": "R006"
+        },
+        {
+          "text": "Sister",
+          "value": "R007"
+        },
+        {
+          "text": "Father-in-law",
+          "value": "R008"
+        },
+        {
+          "text": "Mother-in-law",
+          "value": "R009"
+        },
+        {
+          "text": "Grand Father",
+          "value": "R010"
+        },
+        {
+          "text": "Grand Mother",
+          "value": "R011"
+        },
+        {
+          "text": "Grand Son",
+          "value": "R012"
+        },
+        {
+          "text": "Grand Daughter",
+          "value": "R013"
+        },
+        {
+          "text": "Other",
+          "value": "R014"
+        }
+      ]
+    },
+    {
+      "path": "disability_declarant.relationship_others",
+      "label": "Relationship (Others)",
+      "section": "Disability Declaration",
+      "type": "Varchar(100)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "vernacular_declarant.first_name",
+      "label": "First Name",
+      "section": "Vernacular Declaration",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "vernacular_declarant.middle_name",
+      "label": "Middle Name",
+      "section": "Vernacular Declaration",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "vernacular_declarant.last_name",
+      "label": "Last Name",
+      "section": "Vernacular Declaration",
+      "type": "Varchar(60)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "vernacular_declarant.declarant_contact",
+      "label": "Mobile Number",
+      "section": "Vernacular Declaration",
+      "type": null,
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "vernacular_declarant.address",
+      "label": "Declarant Address",
+      "section": "Vernacular Declaration",
+      "type": "Varchar(100)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "vernacular_declarant.declarant_relation",
+      "label": "Relationship with Prospect",
+      "section": "Vernacular Declaration",
+      "type": null,
+      "coded": true,
+      "repeat_group": null,
+      "allowed_values": [
+        "Spouse",
+        "Son",
+        "Daughter",
+        "Father",
+        "Mother",
+        "Brother",
+        "Sister",
+        "Father-in-law",
+        "Mother-in-law",
+        "Grand Father",
+        "Grand Mother",
+        "Grand Son",
+        "Grand Daughter",
+        "Other"
+      ],
+      "options": [
+        {
+          "text": "Spouse",
+          "value": "R001"
+        },
+        {
+          "text": "Son",
+          "value": "R002"
+        },
+        {
+          "text": "Daughter",
+          "value": "R003"
+        },
+        {
+          "text": "Father",
+          "value": "R004"
+        },
+        {
+          "text": "Mother",
+          "value": "R005"
+        },
+        {
+          "text": "Brother",
+          "value": "R006"
+        },
+        {
+          "text": "Sister",
+          "value": "R007"
+        },
+        {
+          "text": "Father-in-law",
+          "value": "R008"
+        },
+        {
+          "text": "Mother-in-law",
+          "value": "R009"
+        },
+        {
+          "text": "Grand Father",
+          "value": "R010"
+        },
+        {
+          "text": "Grand Mother",
+          "value": "R011"
+        },
+        {
+          "text": "Grand Son",
+          "value": "R012"
+        },
+        {
+          "text": "Grand Daughter",
+          "value": "R013"
+        },
+        {
+          "text": "Other",
+          "value": "R014"
+        }
+      ]
+    },
+    {
+      "path": "vernacular_declarant.relationship_others",
+      "label": "Relationship (Others)",
+      "section": "Vernacular Declaration",
+      "type": null,
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "vernacular_declarant.language",
+      "label": "Language",
+      "section": "Vernacular Declaration",
+      "type": "Varchar(30)",
+      "coded": true,
+      "repeat_group": null,
+      "allowed_values": [
+        "Hindi",
+        "English",
+        "Marathi",
+        "Gujarati",
+        "Tamil",
+        "Telugu",
+        "Kannada",
+        "Malayalam",
+        "Bengali",
+        "Punjabi",
+        "Odia",
+        "Assamese",
+        "Urdu",
+        "Other"
+      ],
+      "options": [
+        {
+          "text": "Hindi",
+          "value": "L001"
+        },
+        {
+          "text": "English",
+          "value": "L002"
+        },
+        {
+          "text": "Marathi",
+          "value": "L003"
+        },
+        {
+          "text": "Gujarati",
+          "value": "L004"
+        },
+        {
+          "text": "Tamil",
+          "value": "L005"
+        },
+        {
+          "text": "Telugu",
+          "value": "L006"
+        },
+        {
+          "text": "Kannada",
+          "value": "L007"
+        },
+        {
+          "text": "Malayalam",
+          "value": "L008"
+        },
+        {
+          "text": "Bengali",
+          "value": "L009"
+        },
+        {
+          "text": "Punjabi",
+          "value": "L010"
+        },
+        {
+          "text": "Odia",
+          "value": "L011"
+        },
+        {
+          "text": "Assamese",
+          "value": "L012"
+        },
+        {
+          "text": "Urdu",
+          "value": "L013"
+        },
+        {
+          "text": "Other",
+          "value": "L014"
+        }
+      ]
+    },
+    {
+      "path": "otp_details[0].otp_type",
+      "label": "OTP Type",
+      "section": "OTP Details",
+      "type": null,
+      "coded": true,
+      "repeat_group": "otp_details"
+    },
+    {
+      "path": "payment_details.payment_status",
+      "label": "Payment Status",
+      "section": "Payment Details",
+      "type": "Varchar",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "payment_details.premium_paid",
+      "label": "Premium Paid",
+      "section": "Payment Details",
+      "type": "Numeric(20)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "payment_details.payment_date",
+      "label": "Payment Date",
+      "section": "Payment Details",
+      "type": "Date",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "payment_details.transaction_number",
+      "label": "Transaction Number",
+      "section": "Payment Details",
+      "type": "Alpha Numeric",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "medical_lifestyle_questions[0].code",
+      "label": "Code",
+      "section": "Medical Questions",
+      "type": null,
+      "coded": true,
+      "repeat_group": "medical_lifestyle_questions",
+      "allowed_values": [
+        "Do you have or simultaneously applied any group insurance cover which is linked to this loan/mortgage with Axis Max Life Insurance or any other Life insurance company?",
+        "Have you ever been convicted or are you under investigation for any criminal charges?",
+        "Have you consulted any doctor for treatment or are under treatment for any ailment other than common cough/cold or undergone any surgical operation at a hospital/clinic or undergone any investigations with other than normal or negative results (including X rays, ECG, blood tests, biopsies, etc.) or have you been absent from work due to any illness or injury for a continuous period of more than 7 days during the last 5 years or have any surgery planned or are you currently aware that you may need to seek medical advice in the near future?",
+        "Have you ever been diagnosed with or received treatment for any disability or medical condition such as but not limited to: (a) Heart disease, stroke, cancer/tumor, kidney disease, lung disease/asthma/tuberculosis, liver disease/hepatitis; (b) Diabetes, high blood pressure, high cholesterol; (c) HIV/AIDS infection/sexually transmitted infections; (d) Congenital defect/genetic disorders/physical deformity/autoimmune, genitourinary/any disease or disorder of hearing, speech or vision excluding refractive errors; (e) Paralysis, epilepsy, any mental/psychiatric disorder, any disorder of brain/nervous system; (f) Arthritis, disorder of muscles/bones/joints, blood disorder, thyroid disorder, chronic digestive disorder, endocrine disorder?",
+        "Have any of your applications, including applications for life, critical illness, health, accident or any other riders including simultaneous/renewals/revivals ever been declined, deferred, withdrawn or accepted at extra premium or reduced cover or offered any special terms by Axis Max Life Insurance or any other insurance company in India or overseas?",
+        "Have you ever been involved or planning to be involved in an occupation, sport or hobby of a dangerous or hazardous nature such as mining, diving, mountaineering, parachuting, private aviation, racing, etc.?",
+        "Do you: (a) consume more than 10 cigarettes or bidis per day; or (b) chew more than 5 pouches of tobacco per day; or (c) consume more than 2 pegs of alcohol per day?",
+        "Do you currently or have you ever used any narcotics or any other drug?",
+        "Do you currently or have you ever used any narcotics or any other drug?\n\nI hereby declare that:\n1) I do not have any Life or Health Insurance Policy issued/pending/lapsed with Axis Max Life Insurance Limited or with any other company. If yes, please provide the proposal/Policy/Application number.\n2) I do not have any or simultaneously applied any group insurance cover which is linked to this loan/mortgage with Axis Max Life Insurance or any other life insurance company.\n3) In the last 2 years, I have not had a reduction in weight (of more than 10 kg), nor have I consulted a doctor for treatment or am under treatment for any ailment other than common cough/cold, nor undergone any surgical operation at a hospital/clinic, nor undergone any investigations with other than normal or negative results (including X-rays, ECG, blood tests, biopsies, etc.), nor been absent from work/hospitalized due to any illness or injury for a continuous period of more than 7 days during the last 5 years. I do not have any surgery planned nor am I currently aware that I may need to seek medical advice in the near future.\n4) I have never been diagnosed with or received treatment for any disability or medical condition such as, but not limited to:\na) Heart disease, stroke, cancer/tumor/lump, kidney disease, urinary tract disease, lung disease/asthma/tuberculosis, liver disease/hepatitis\nb) Diabetes, high blood pressure, high cholesterol, prostate or gynecological disorder, gastrointestinal diseases\nc) HIV/AIDS infection or sexually transmitted infections\nd) Congenital defect/genetic disorders/physical deformity/autoimmune/genitourinary disorders or any disease or disorder of hearing, speech or vision excluding refractive errors\ne) Paralysis in any form, epilepsy, any mental/psychiatric disorder, any disorder of brain/cerebrovascular disease or nervous system\nf) Arthritis, disorder of spine/muscles/bones/joints, blood disorder, thyroid disorder, chronic digestive disorder, endocrine disorder\n5) None of my applications, including applications for life, critical illness, health, accident or any other riders including simultaneous/renewals/revivals, has ever been declined, deferred, withdrawn, accepted at extra premium, reduced cover, or offered special terms by Axis Max Life Insurance or any other insurance company in India or overseas.\n6) I have never been involved or planning to be involved in an occupation, sport or hobby of a dangerous or hazardous nature such as mining, diving, mountaineering, parachuting, private aviation, racing, etc.\n7) I do not consume alcohol more than 100 ml of wine/day, 1000 ml of beer/day or 60 ml of hard liquor/day, nor smoke tobacco more than 10 cigarettes/day or chew more than 10 sachets/day or consume it in any other form.\n8) I do not consume drugs like Cannabis/Marijuana/Ecstasy/Heroin/LSD/Amphetamines or any other illegal drugs.\n9) I have never ever been convicted or been under investigation for any criminal charges.\n10) I have not travelled, nor intend to travel or reside abroad other than on a holiday of more than 4 weeks in the next 12 months.\n11) The Insured/Proposer/Joint Life/Nominee/Payor is not a Politically Exposed Person.\n\nIf the answer to any of the above questions is No, please provide complete details."
+      ],
+      "options": [
+        {
+          "text": "Do you have or simultaneously applied any group insurance cover which is linked to this loan/mortgage with Axis Max Life Insurance or any other Life insurance company?",
+          "value": "10001"
+        },
+        {
+          "text": "Have you ever been convicted or are you under investigation for any criminal charges?",
+          "value": "10002"
+        },
+        {
+          "text": "Have you consulted any doctor for treatment or are under treatment for any ailment other than common cough/cold or undergone any surgical operation at a hospital/clinic or undergone any investigations with other than normal or negative results (including X rays, ECG, blood tests, biopsies, etc.) or have you been absent from work due to any illness or injury for a continuous period of more than 7 days during the last 5 years or have any surgery planned or are you currently aware that you may need to seek medical advice in the near future?",
+          "value": "10003"
+        },
+        {
+          "text": "Have you ever been diagnosed with or received treatment for any disability or medical condition such as but not limited to: (a) Heart disease, stroke, cancer/tumor, kidney disease, lung disease/asthma/tuberculosis, liver disease/hepatitis; (b) Diabetes, high blood pressure, high cholesterol; (c) HIV/AIDS infection/sexually transmitted infections; (d) Congenital defect/genetic disorders/physical deformity/autoimmune, genitourinary/any disease or disorder of hearing, speech or vision excluding refractive errors; (e) Paralysis, epilepsy, any mental/psychiatric disorder, any disorder of brain/nervous system; (f) Arthritis, disorder of muscles/bones/joints, blood disorder, thyroid disorder, chronic digestive disorder, endocrine disorder?",
+          "value": "10004"
+        },
+        {
+          "text": "Have any of your applications, including applications for life, critical illness, health, accident or any other riders including simultaneous/renewals/revivals ever been declined, deferred, withdrawn or accepted at extra premium or reduced cover or offered any special terms by Axis Max Life Insurance or any other insurance company in India or overseas?",
+          "value": "10005"
+        },
+        {
+          "text": "Have you ever been involved or planning to be involved in an occupation, sport or hobby of a dangerous or hazardous nature such as mining, diving, mountaineering, parachuting, private aviation, racing, etc.?",
+          "value": "10006"
+        },
+        {
+          "text": "Do you: (a) consume more than 10 cigarettes or bidis per day; or (b) chew more than 5 pouches of tobacco per day; or (c) consume more than 2 pegs of alcohol per day?",
+          "value": "10007"
+        },
+        {
+          "text": "Do you currently or have you ever used any narcotics or any other drug?",
+          "value": "10008"
+        },
+        {
+          "text": "Do you currently or have you ever used any narcotics or any other drug?\n\nI hereby declare that:\n1) I do not have any Life or Health Insurance Policy issued/pending/lapsed with Axis Max Life Insurance Limited or with any other company. If yes, please provide the proposal/Policy/Application number.\n2) I do not have any or simultaneously applied any group insurance cover which is linked to this loan/mortgage with Axis Max Life Insurance or any other life insurance company.\n3) In the last 2 years, I have not had a reduction in weight (of more than 10 kg), nor have I consulted a doctor for treatment or am under treatment for any ailment other than common cough/cold, nor undergone any surgical operation at a hospital/clinic, nor undergone any investigations with other than normal or negative results (including X-rays, ECG, blood tests, biopsies, etc.), nor been absent from work/hospitalized due to any illness or injury for a continuous period of more than 7 days during the last 5 years. I do not have any surgery planned nor am I currently aware that I may need to seek medical advice in the near future.\n4) I have never been diagnosed with or received treatment for any disability or medical condition such as, but not limited to:\na) Heart disease, stroke, cancer/tumor/lump, kidney disease, urinary tract disease, lung disease/asthma/tuberculosis, liver disease/hepatitis\nb) Diabetes, high blood pressure, high cholesterol, prostate or gynecological disorder, gastrointestinal diseases\nc) HIV/AIDS infection or sexually transmitted infections\nd) Congenital defect/genetic disorders/physical deformity/autoimmune/genitourinary disorders or any disease or disorder of hearing, speech or vision excluding refractive errors\ne) Paralysis in any form, epilepsy, any mental/psychiatric disorder, any disorder of brain/cerebrovascular disease or nervous system\nf) Arthritis, disorder of spine/muscles/bones/joints, blood disorder, thyroid disorder, chronic digestive disorder, endocrine disorder\n5) None of my applications, including applications for life, critical illness, health, accident or any other riders including simultaneous/renewals/revivals, has ever been declined, deferred, withdrawn, accepted at extra premium, reduced cover, or offered special terms by Axis Max Life Insurance or any other insurance company in India or overseas.\n6) I have never been involved or planning to be involved in an occupation, sport or hobby of a dangerous or hazardous nature such as mining, diving, mountaineering, parachuting, private aviation, racing, etc.\n7) I do not consume alcohol more than 100 ml of wine/day, 1000 ml of beer/day or 60 ml of hard liquor/day, nor smoke tobacco more than 10 cigarettes/day or chew more than 10 sachets/day or consume it in any other form.\n8) I do not consume drugs like Cannabis/Marijuana/Ecstasy/Heroin/LSD/Amphetamines or any other illegal drugs.\n9) I have never ever been convicted or been under investigation for any criminal charges.\n10) I have not travelled, nor intend to travel or reside abroad other than on a holiday of more than 4 weeks in the next 12 months.\n11) The Insured/Proposer/Joint Life/Nominee/Payor is not a Politically Exposed Person.\n\nIf the answer to any of the above questions is No, please provide complete details.",
+          "value": "10051"
+        }
+      ]
+    },
+    {
+      "path": "medical_lifestyle_questions[0].answer",
+      "label": "Answer",
+      "section": "Medical Questions",
+      "type": null,
+      "coded": false,
+      "repeat_group": "medical_lifestyle_questions"
+    },
+    {
+      "path": "medical_lifestyle_questions[0].isAnswer",
+      "label": "is Answered",
+      "section": "Medical Questions",
+      "type": null,
+      "coded": false,
+      "repeat_group": "medical_lifestyle_questions"
+    },
+    {
+      "path": "medical_lifestyle_questions[0].description",
+      "label": "Description",
+      "section": "Medical Questions",
+      "type": null,
+      "coded": false,
+      "repeat_group": "medical_lifestyle_questions"
+    },
+    {
+      "path": "documents[0].documentName",
+      "label": "Document Name",
+      "section": "Documents",
+      "type": null,
+      "coded": true,
+      "repeat_group": "documents"
+    }
+  ]
+}

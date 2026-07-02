@@ -10,15 +10,11 @@
   h1 { font-size: 20px; font-weight: 600; margin-bottom: 20px; }
   .card { background: var(--panel); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
   .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  input[type=text] { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #2a2f3d; background: #10131c; color: var(--text); }
   button { padding: 10px 18px; border-radius: 8px; border: none; background: var(--accent); color: white; font-weight: 600; cursor: pointer; }
   button:disabled { opacity: 0.4; cursor: not-allowed; }
   button.secondary { background: #2a2f3d; }
-  button.small { padding: 4px 10px; font-size: 12px; }
   #fileLabel { display: inline-block; padding: 10px 18px; border-radius: 8px; background: #2a2f3d; cursor: pointer; }
   #fileName { color: var(--muted); font-size: 13px; }
-  #fieldList { list-style: none; padding: 0; margin: 12px 0 0 0; display: flex; flex-direction: column; gap: 8px; }
-  #fieldList li { display: flex; justify-content: space-between; align-items: center; background: #10131c; padding: 8px 12px; border-radius: 8px; border-left: 3px solid var(--accent); }
   #progress { display: none; margin-top: 10px; }
   .step { display: flex; align-items: center; gap: 10px; padding: 8px 0; color: var(--muted); font-size: 14px; }
   .step.active { color: var(--text); }
@@ -28,12 +24,23 @@
   .check { visibility: hidden; }
   .step.done .check { visibility: visible; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  #results table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-  #results td, #results th { padding: 10px 12px; border-bottom: 1px solid #2a2f3d; text-align: left; }
-  #results th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; }
   #status { color: var(--muted); font-size: 13px; margin-top: 8px; }
-  .found { color: #4fd18b; }
-  .notfound { color: #e05c5c; }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  td, th { padding: 8px 12px; border-bottom: 1px solid #2a2f3d; text-align: left; vertical-align: middle; }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; }
+  .sec-row td { background: #10131c; color: var(--accent); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  .inst-row td { background: #141824; color: var(--muted); font-weight: 600; font-size: 11px; padding-left: 20px; }
+  .lbl { font-size: 13px; }
+  .path { color: var(--muted); font-size: 11px; }
+  td.val input, td.val select { width: 100%; padding: 7px 9px; border-radius: 6px; border: 1px solid #2a2f3d; background: #10131c; color: var(--text); font-size: 13px; }
+  tr.low td.val input, tr.low td.val select { background: #43400f; border-color: #d8c65a; color: #fff5c2; }
+  tr.noout td.val input { border-style: dashed; color: var(--muted); }
+  .conf { font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .conf.low { color: #e6c04f; font-weight: 700; }
+  .conf.noout { color: #e05c5c; }
+  #jsonBox { width: 100%; height: 320px; margin-top: 10px; background: #0b0d13; color: #cfe3ff; border: 1px solid #2a2f3d; border-radius: 8px; padding: 12px; font-family: Consolas, monospace; font-size: 12px; white-space: pre; overflow: auto; }
+  .legend { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; vertical-align: middle; margin: 0 4px 0 12px; }
 </style>
 </head>
 <body>
@@ -51,149 +58,221 @@
 </div>
 
 <div class="card">
-  <strong>Fields to extract</strong>
-  <div class="row" style="margin-top:10px;">
-    <input type="text" id="fieldInput" placeholder="e.g. Policy Number">
-    <button id="addFieldBtn">+ Add field</button>
-  </div>
-  <ul id="fieldList"></ul>
-</div>
-
-<div class="card">
   <button id="extractBtn" disabled>Extract</button>
-  <button id="downloadBtn" class="secondary" style="display:none;">Download report (CSV)</button>
-
+  <button id="downloadBtn" class="secondary" style="display:none;">Download JSON</button>
   <div id="progress">
     <div class="step" id="step-ocr"><span class="spinner"></span><span class="check">&#10003;</span> Extracting text via OCR...</div>
-    <div class="step" id="step-llm"><span class="spinner"></span><span class="check">&#10003;</span> Calling VLM for field extraction...</div>
+    <div class="step" id="step-llm"><span class="spinner"></span><span class="check">&#10003;</span> Reading fields with LLM...</div>
   </div>
-
   <div id="status"></div>
-
-  <div id="results" style="display:none;">
-    <table>
-      <thead><tr><th>Field</th><th>Value</th></tr></thead>
-      <tbody id="resultsBody"></tbody>
-    </table>
+  <div class="legend" id="legend" style="display:none;">
+    Reviewer: edit any cell — JSON updates live.
+    <span class="swatch" style="background:#43400f;"></span>confidence &lt; 95% (verify against document)
+    <span class="swatch" style="background:transparent;border:1px dashed #8a8fa3;"></span>NO OUTPUT
   </div>
+</div>
+
+<div class="card" id="tableCard" style="display:none;">
+  <table>
+    <thead><tr><th style="width:38%">Field</th><th style="width:44%">Value</th><th style="width:18%">Confidence</th></tr></thead>
+    <tbody id="resultsBody"></tbody>
+  </table>
+</div>
+
+<div class="card" id="jsonCard" style="display:none;">
+  <strong>Output JSON (live)</strong>
+  <div id="jsonBox"></div>
 </div>
 
 <script>
 const pdfInput = document.getElementById('pdfInput');
 const fileName = document.getElementById('fileName');
-const fieldInput = document.getElementById('fieldInput');
-const addFieldBtn = document.getElementById('addFieldBtn');
-const fieldList = document.getElementById('fieldList');
 const extractBtn = document.getElementById('extractBtn');
 const downloadBtn = document.getElementById('downloadBtn');
 const progress = document.getElementById('progress');
 const status = document.getElementById('status');
-const results = document.getElementById('results');
+const legend = document.getElementById('legend');
+const tableCard = document.getElementById('tableCard');
+const jsonCard = document.getElementById('jsonCard');
 const resultsBody = document.getElementById('resultsBody');
+const jsonBox = document.getElementById('jsonBox');
 
 let docId = null;
-let fields = [];
-let lastResults = {};
+let fieldsData = [];
 
-function setStatus(msg) { status.textContent = msg; }
-
-function renderFieldList() {
-  fieldList.innerHTML = '';
-  fields.forEach((f, i) => {
-    const li = document.createElement('li');
-    const span = document.createElement('span');
-    span.textContent = f;
-    const del = document.createElement('button');
-    del.textContent = 'x';
-    del.className = 'small secondary';
-    del.onclick = () => { fields.splice(i, 1); renderFieldList(); updateExtractBtn(); };
-    li.appendChild(span);
-    li.appendChild(del);
-    fieldList.appendChild(li);
-  });
-}
-
-function updateExtractBtn() {
-  extractBtn.disabled = !(docId && fields.length > 0);
-}
-
-addFieldBtn.addEventListener('click', () => {
-  const name = fieldInput.value.trim();
-  if (!name) return;
-  fields.push(name);
-  fieldInput.value = '';
-  renderFieldList();
-  updateExtractBtn();
-});
-
-fieldInput.addEventListener('keydown', e => {
-  if (e.key === 'Enter') addFieldBtn.click();
-});
+function setStatus(m) { status.textContent = m; }
+function setStep(id, s) { const e = document.getElementById(id); e.classList.remove('active','done'); if (s) e.classList.add(s); }
+function updateExtractBtn() { extractBtn.disabled = !docId; }
 
 pdfInput.addEventListener('change', async () => {
   const file = pdfInput.files[0];
   if (!file) return;
   fileName.textContent = file.name;
   setStatus('Uploading...');
-  const formData = new FormData();
-  formData.append('pdf', file);
-  const res = await fetch('/upload', { method: 'POST', body: formData });
+  const fd = new FormData();
+  fd.append('pdf', file);
+  const res = await fetch('/upload', { method: 'POST', body: fd });
   const data = await res.json();
   docId = data.doc_id;
   setStatus('Uploaded: ' + data.filename);
   updateExtractBtn();
 });
 
-function setStep(id, state) {
-  const el = document.getElementById(id);
-  el.classList.remove('active', 'done');
-  if (state) el.classList.add(state);
+// mirror of python _set_path: build nested template.json from flat {path:value}
+function assemble(flat) {
+  const root = {};
+  for (const [path, val] of Object.entries(flat)) {
+    if (val === '' || val === 'NOT_FOUND') continue;
+    const tokens = path.split('.');
+    let cur = root;
+    tokens.forEach((tok, i) => {
+      const m = tok.match(/^([^\[]+)(?:\[(\d+)\])?$/);
+      const key = m[1], idx = m[2];
+      const last = i === tokens.length - 1;
+      if (idx === undefined) {
+        if (last) cur[key] = val;
+        else cur = (cur[key] = cur[key] || {});
+      } else {
+        const n = parseInt(idx);
+        const arr = (cur[key] = cur[key] || []);
+        while (arr.length <= n) arr.push({});
+        if (last) arr[n] = val; else cur = arr[n];
+      }
+    });
+  }
+  ['medical_lifestyle_questions', 'declaration'].forEach(g => {
+    if (Array.isArray(root[g])) root[g].forEach(e => {
+      e.answer = e.answer || '';
+      e.isAnswer = e.answer === 'Yes';
+      if (g === 'medical_lifestyle_questions') e.description = e.description || '';
+    });
+  });
+  return root;
+}
+
+function currentFlat() {
+  const flat = {};
+  fieldsData.forEach(f => { flat[f.path] = f.value; });
+  return flat;
+}
+
+function refreshJson() {
+  jsonBox.textContent = JSON.stringify(assemble(currentFlat()), null, 2);
+}
+
+function renderTable() {
+  resultsBody.innerHTML = '';
+  let lastSection = null;
+  let lastInst = null;
+  fieldsData.forEach((f, i) => {
+    if (f.section !== lastSection) {
+      lastSection = f.section;
+      lastInst = null;
+      const sr = document.createElement('tr');
+      sr.className = 'sec-row';
+      sr.innerHTML = `<td colspan="3">${f.section || 'Other'}</td>`;
+      resultsBody.appendChild(sr);
+    }
+    const im = f.path.match(/^(\w+)\[(\d+)\]/);
+    const instKey = im ? im[1] + im[2] : null;
+    if (instKey && instKey !== lastInst) {
+      lastInst = instKey;
+      const ir = document.createElement('tr');
+      ir.className = 'inst-row';
+      ir.innerHTML = `<td colspan="3">${f.section || 'Entry'} #${parseInt(im[2]) + 1}</td>`;
+      resultsBody.appendChild(ir);
+    }
+    const tr = document.createElement('tr');
+    if (f.low) tr.className = 'low';
+    else if (f.state === 'no_output') tr.className = 'noout';
+
+    const tdF = document.createElement('td');
+    tdF.innerHTML = `<div class="lbl">${f.label}</div><div class="path">${f.path}</div>`;
+
+    const tdV = document.createElement('td');
+    tdV.className = 'val';
+    if (f.readonly) {
+      tdV.innerHTML = `<span class="path">${f.value}</span>`;
+      const tdC0 = document.createElement('td');
+      tr.appendChild(tdF); tr.appendChild(tdV); tr.appendChild(tdC0);
+      resultsBody.appendChild(tr);
+      return;
+    }
+    let input;
+    if (f.options) {
+      input = document.createElement('select');
+      const blank = document.createElement('option');
+      blank.value = ''; blank.textContent = '— NO OUTPUT —';
+      input.appendChild(blank);
+      f.options.forEach(o => {
+        const opt = document.createElement('option');
+        opt.value = o.value; opt.textContent = o.text;
+        if (f.value === o.value) opt.selected = true;
+        input.appendChild(opt);
+      });
+    } else {
+      input = document.createElement('input');
+      input.type = 'text';
+      input.value = f.state === 'no_output' ? '' : f.value;
+      input.placeholder = 'NO OUTPUT';
+    }
+    input.addEventListener('input', () => {
+      f.value = input.value;
+      tr.classList.remove('low', 'noout');
+      refreshJson();
+    });
+    input.addEventListener('change', () => {
+      f.value = input.value;
+      tr.classList.remove('low', 'noout');
+      refreshJson();
+    });
+    tdV.appendChild(input);
+
+    const tdC = document.createElement('td');
+    if (f.state === 'no_output') tdC.innerHTML = `<span class="conf noout">${f.note ? f.note : 'NO OUTPUT'}</span>`;
+    else if (f.confidence === null) tdC.innerHTML = '<span class="conf low">unverified</span>';
+    else {
+      const pct = Math.round(f.confidence * 100);
+      tdC.innerHTML = `<span class="conf ${f.low ? 'low' : ''}">${pct}%</span>`;
+    }
+
+    tr.appendChild(tdF); tr.appendChild(tdV); tr.appendChild(tdC);
+    resultsBody.appendChild(tr);
+  });
 }
 
 extractBtn.addEventListener('click', async () => {
   extractBtn.disabled = true;
   downloadBtn.style.display = 'none';
-  results.style.display = 'none';
+  tableCard.style.display = 'none';
+  jsonCard.style.display = 'none';
+  legend.style.display = 'none';
   progress.style.display = 'block';
-  setStep('step-ocr', 'active');
-  setStep('step-llm', null);
+  setStep('step-ocr', 'active'); setStep('step-llm', null);
   setStatus('');
-
   try {
     const ocrRes = await fetch('/run_ocr', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ doc_id: docId }),
     });
     const ocrData = await ocrRes.json();
     if (ocrData.error) throw new Error(ocrData.error);
-    setStep('step-ocr', 'done');
-    setStep('step-llm', 'active');
+    setStep('step-ocr', 'done'); setStep('step-llm', 'active');
 
-    const llmRes = await fetch('/run_llm', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ doc_id: docId, fields: fields }),
+    const res = await fetch('/run_template', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ doc_id: docId }),
     });
-    const llmData = await llmRes.json();
-    if (llmData.error) throw new Error(llmData.error);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
     setStep('step-llm', 'done');
 
-    lastResults = llmData.results;
-    resultsBody.innerHTML = '';
-    fields.forEach(f => {
-      const val = lastResults[f] ?? 'NOT_FOUND';
-      const tr = document.createElement('tr');
-      const tdField = document.createElement('td');
-      tdField.textContent = f;
-      const tdVal = document.createElement('td');
-      tdVal.textContent = val;
-      tdVal.className = val === 'NOT_FOUND' ? 'notfound' : 'found';
-      tr.appendChild(tdField);
-      tr.appendChild(tdVal);
-      resultsBody.appendChild(tr);
-    });
-    results.style.display = 'block';
+    fieldsData = data.fields;
+    renderTable();
+    refreshJson();
+    tableCard.style.display = 'block';
+    jsonCard.style.display = 'block';
+    legend.style.display = 'block';
     downloadBtn.style.display = 'inline-block';
   } catch (err) {
     setStatus('Error: ' + err.message);
@@ -203,17 +282,10 @@ extractBtn.addEventListener('click', async () => {
 });
 
 downloadBtn.addEventListener('click', () => {
-  const lines = ['field,value'];
-  fields.forEach(f => {
-    const val = (lastResults[f] ?? 'NOT_FOUND').replace(/"/g, '""');
-    lines.push(`"${f}","${val}"`);
-  });
-  const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+  const blob = new Blob([JSON.stringify(assemble(currentFlat()), null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = 'extraction_report.csv';
-  a.click();
+  a.href = url; a.download = 'extraction.json'; a.click();
   URL.revokeObjectURL(url);
 });
 </script>

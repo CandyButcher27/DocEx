@@ -1,0 +1,387 @@
+{
+    "id": "574b29eb-0b7b-4570-92cc-f344d9d9be8e",
+    "proposalNumber": "BPR829286417",
+    "data": {
+        "loan_details": {
+            "loanAppNumber": "ithasblank",
+            "loan_account_number": "ithasblank",
+            "insurancePeriod_months": 24,
+            "loan_disbursement_date": "30-06-2026",
+            "loanAmount": 200000,
+            "loanTenure_months": 24
+        },
+        "loanDetails": {
+            "loanType": "Car Loan",
+            "hasFinancePremium": true
+        },
+        "quoteDetails": {
+            "requestData": {
+                "loanDetails": {
+                    "tenure": 2,
+                    "interestRate": 10,
+                    "moratoriumEnabled": false,
+                    "moratoriumPeriodInMonths": 0,
+                    "interestPayment_option": "",
+                    "schemeType": "Reducing Cover",
+                    "coverOption": "Reducing Cover",
+                    "sumAssured": 200000,
+                    "loanAppNumber": "ithasblank",
+                    "loanType": "Car Loan",
+                    "loanAcNumber": "ithasblank",
+                    "loanDisbursementDate": "30-06-2026",
+                    "hasFinancePremium": true,
+                    "coBorrowerFlag": "No",
+                    "coborrowerSumAssured": 0,
+                    "coborrowerTenure": 0
+                },
+                "data": {
+                    "loan_details": {
+                        "insurancePeriod_months": 24
+                    },
+                    "insured_details": {
+                        "applicant_details": "APD001",
+                        "type_of_applicant": "APD001",
+                        "gender": ""
+                    },
+                    "member_details": {
+                        "borrowerType": "APD001"
+                    }
+                },
+                "memberDetails": {
+                    "borrowerType": "Borrower",
+                    "firstName": "Bhavana",
+                    "lastName": "Peram",
+                    "dob": "15-05-1985",
+                    "gender": "Male",
+                    "mobileNumber": "9811001001",
+                    "countryCode": "+91"
+                },
+                "borrowerType": "APD001",
+                "productId": "PRGCL-10003",
+                "channel": "test-seller",
+                "addon": []
+            },
+            "success": true,
+            "statusCode": 200,
+            "message": "Calculation success",
+            "error": null,
+            "quotes": [
+                {
+                    "quoteId": "BQT-1782892198224-464960",
+                    "productId": "PRGCL-10003",
+                    "productName": "Test-Seller",
+                    "premiumRate": 3.05,
+                    "basePremium": 612.2,
+                    "tax": [
+                        {
+                            "type": "GST",
+                            "amount": 110.2
+                        }
+                    ],
+                    "serviceTax": 110.2,
+                    "totalPremium": 722.4,
+                    "initialSA": 200000,
+                    "finalSA": 200722.4,
+                    "tenure": 2,
+                    "medicalUW": false,
+                    "financialUW": false
+                }
+            ]
+        },
+        "insured_details": {
+            "applicant_details": "APD001",
+            "type_of_applicant": "APD001",
+            "share_in_loan": "",
+            "first_name": "Bhavana",
+            "middle_name": "",
+            "last_name": "Peram",
+            "date_of_birth": "15-05-1985",
+            "gender": "G001",
+            "height_cm": "170",
+            "weight_kg": "70",
+            "abha_number": "",
+            "nationality": "NO001",
+            "occupation": "OC001",
+            "education": "EO004",
+            "pan_available": true,
+            "pan_number": "ABCDE1234F",
+            "form97_available": false,
+            "annual_income": "500000",
+            "countryCode": "+91",
+            "mobile_no": "9811001001",
+            "email_id": "ramesh.kumar@email.com"
+        },
+        "member_details": {
+            "borrowerType": "APD001"
+        },
+        "payment_details": {
+            "premium_amount": "722.4",
+            "payment_status": "Paid",
+            "premium_paid": "12000",
+            "payment_date": "01-05-2026",
+            "transaction_number": "TXNS-001"
+        },
+        "address_details": [
+            {
+                "type": "AD001",
+                "address_line_1": "Plot 12, Sector 14",
+                "address_line_2": "Near Civil Hospital",
+                "address_line_3": "",
+                "state": "Haryana",
+                "pin": "122001",
+                "city": "Gurugram"
+            }
+        ],
+        "proposer_details": {
+            "first_name": "Ramesh",
+            "middle_name": "",
+            "last_name": "Kumar",
+            "date_of_birth": "15-05-1985",
+            "relationship_with_insured": "Self",
+            "gender": "G001"
+        },
+        "nominee_details": [
+            {
+                "first_name": "Sunita",
+                "middle_name": "",
+                "last_name": "Devi",
+                "date_of_birth": "15-06-1990",
+                "gender": "G002",
+                "relationship_with_life_insured": "R001",
+                "other_relation": "",
+                "percentage_share": "100",
+                "mobile_no": "9876543211",
+                "id": "577146241602",
+                "mobile_country_code": "+91",
+                "email_id": "sunita@email.com",
+                "address_line_1": "Flat 2, Sector 15",
+                "address_line_2": "",
+                "address_line_3": "",
+                "city": "Gurugram",
+                "state": "Haryana",
+                "pin_code": "122001",
+                "account_holder_name": "Sunita Devi",
+                "account_number": "501000000000",
+                "ifsc_code": "HDFC0001234",
+                "bank_branch": "HDFC Bank, Gurugram",
+                "appointee_first_name": "",
+                "appointee_middle_name": "",
+                "appointee_last_name": "",
+                "appointee_dob": "",
+                "appointee_gender": "",
+                "appointee_relationship_with_nominee": ""
+            },
+            {
+                "first_name": "",
+                "middle_name": "",
+                "last_name": "",
+                "date_of_birth": "",
+                "gender": "",
+                "relationship_with_life_insured": "",
+                "other_relation": "",
+                "percentage_share": "",
+                "mobile_no": "",
+                "id": "757466963384",
+                "email_id": "",
+                "address_line_1": "",
+                "address_line_2": "",
+                "address_line_3": "",
+                "city": "",
+                "state": "",
+                "pin_code": "",
+                "account_holder_name": "",
+                "account_number": "",
+                "ifsc_code": "",
+                "bank_branch": "",
+                "appointee_first_name": "",
+                "appointee_middle_name": "",
+                "appointee_last_name": "",
+                "appointee_dob": "",
+                "appointee_gender": "",
+                "appointee_relationship_with_nominee": ""
+            }
+        ],
+        "medical_lifestyle_questions": [
+            {
+                "code": "10001",
+                "answer": "No",
+                "isAnswer": false,
+                "description": ""
+            },
+            {
+                "code": "10002",
+                "answer": "No",
+                "isAnswer": false,
+                "description": ""
+            },
+            {
+                "code": "10003",
+                "answer": "No",
+                "isAnswer": false,
+                "description": ""
+            },
+            {
+                "code": "10004",
+                "answer": "No",
+                "isAnswer": false,
+                "description": ""
+            },
+            {
+                "code": "10005",
+                "answer": "No",
+                "isAnswer": false,
+                "description": ""
+            },
+            {
+                "code": "10006",
+                "answer": "No",
+                "isAnswer": false,
+                "description": ""
+            },
+            {
+                "code": "10007",
+                "answer": "No",
+                "isAnswer": false,
+                "description": ""
+            },
+            {
+                "code": "10008",
+                "answer": "No",
+                "isAnswer": false,
+                "description": ""
+            }
+        ],
+        "declaration": [
+            {
+                "code": "20001",
+                "answer": "Yes",
+                "isAnswer": true
+            },
+            {
+                "code": "20002",
+                "answer": "Yes",
+                "isAnswer": true
+            },
+            {
+                "code": "20003",
+                "answer": "Yes",
+                "isAnswer": true
+            },
+            {
+                "code": "20004",
+                "answer": "Yes",
+                "isAnswer": true
+            },
+            {
+                "code": "20005",
+                "answer": "No",
+                "isAnswer": false
+            },
+            {
+                "code": "20006",
+                "answer": "",
+                "isAnswer": false
+            }
+        ],
+        "vernacular_declarant": {
+            "language": "L001",
+            "declarant_contact": "9811001001",
+            "declarant_relation": "R001",
+            "relationship_others": "",
+            "declarant_first_name": "Sunita",
+            "declarant_middle_name": "",
+            "declarant_last_name": "Devi",
+            "declarant_address": "Flat 2, Sector 15, Gurugram"
+        },
+        "disability_declarant": {
+            "first_name": "",
+            "middle_name": "",
+            "last_name": "",
+            "address": "",
+            "relationship_with_prospect": "",
+            "relationship_others": "",
+            "mobile_number": ""
+        },
+        "mph_section": {
+            "rm_code": "",
+            "rm_name": "",
+            "rac_location": "GURUGRAM",
+            "mli_sales_manager_code": "DEL9654",
+            "mli_sales_manager_name": "Preeti Gusain",
+            "mph_branch_code": "MPH-GGN-01",
+            "mph_branch_location": "Gurugram",
+            "mph_source_code": "SRC-001",
+            "mph_emp_id": "EMP-001",
+            "seller_code": "SELL-001",
+            "seller_mobileNumber": "9876500001",
+            "seller_mailID": "seller@axismaxlife.com"
+        },
+        "uw_details": {
+            "underwriting": {
+                "required": false,
+                "uwType": "STP",
+                "rules": []
+            }
+        },
+        "created_by_userId": "f13a156a-826e-49cb-aedc-6b7b6242aaec",
+        "created_for_userId": "a7e7d92c-995e-4686-9e4c-7be5f55d61bb",
+        "status": "SUBMITTED",
+        "quoteId": "BQT-1782892198224-464960",
+        "originalLoanApplicationNumber": "ithasblank",
+        "documents": [
+            {
+                "documentId": "afcd340f-a584-42ac-8b2a-ffb9ae56066f",
+                "documentName": "Application Form",
+                "fileName": "Application_Form_BPR829286417_1782892198473.pdf",
+                "name": "Application_Form_BPR829286417_1782892198473.pdf"
+            },
+            {
+                "documentId": "dccece6c-31c3-4ee8-8e41-8d824b9d9985",
+                "documentName": "Certificate of Acknowledgement",
+                "fileName": "COA_BPR829286417_1782892198473.pdf",
+                "name": "COA_BPR829286417_1782892198473.pdf"
+            }
+        ],
+        "masterPolicyDetails": [
+            {
+                "tpa": "",
+                "status": "ACTIVE",
+                "endDate": "2035-12-31",
+                "startDate": "2025-01-01",
+                "policyInception": true,
+                "mandateLetterUrl": "",
+                "masterPolicyNumber": "MP-SELLER-1001",
+                "masterPolicyBrochure": "https://cdn.upsure.io/amli/pdf/master_brochure_doc.pdf",
+                "masterPolicyHolderName": "Axis Max Life Insurance",
+                "masterPolicyDocumentUrl": "https://cdn.upsure.io/amli/pdf/master_policy_document.pdf"
+            }
+        ]
+    },
+    "createdBy": "a7e7d92c-995e-4686-9e4c-7be5f55d61bb",
+    "updatedBy": "a7e7d92c-995e-4686-9e4c-7be5f55d61bb",
+    "status": "SUBMITTED",
+    "masterPolicyNumber": "MP-SELLER-1001",
+    "loanAccountNumber": "ithasblank",
+    "loanApplicationNumber": "ithasblank",
+    "quoteId": "BQT-1782892198224-464960",
+    "acknowledgementNumber": "ithasblank",
+    "productId": "PRGCL-10003",
+    "channel": "test-seller",
+    "agentCode": "SELL-001",
+    "createdByUserId": "f13a156a-826e-49cb-aedc-6b7b6242aaec",
+    "createdForUserId": "a7e7d92c-995e-4686-9e4c-7be5f55d61bb",
+    "journeyType": null,
+    "borrowerType": "APD001",
+    "uwType": "STP",
+    "uw_details": {
+        "underwriting": {
+            "required": false,
+            "uwType": "STP",
+            "rules": []
+        }
+    },
+    "documents": [],
+    "createdAt": "2026-07-01T07:49:58.225Z",
+    "updatedAt": "2026-07-01T07:50:00.714Z"
+}
+ 
