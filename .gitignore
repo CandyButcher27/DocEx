@@ -39,6 +39,7 @@ scanned_docs/
 *.log
 *.ocrcache.json
 test_output.json
+onepage.pdf
 _view/
 crop_test.py
 

@@ -25,7 +25,7 @@ def run_extraction(ocr_json: dict, prompt: str, model: str = OLLAMA_MODEL) -> st
             "Authorization": f"Bearer {OLLAMA_API_KEY}",
             "Content-Type": "application/json",
         },
-        json={"model": model, "messages": messages},
+        json={"model": model, "messages": messages, "temperature": 0},
         timeout=120,
     )
     resp.raise_for_status()
