@@ -11,6 +11,7 @@ from PIL import Image
 from ocr_engine import UPLOADS, run_ocr_on_pdf
 from llm_client import run_extraction
 from field_extractor import extract as extract_template
+import ingest_gate
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 HTML_FILE = os.path.join(ROOT, "extract_ui.html")
@@ -148,7 +149,15 @@ class Handler(BaseHTTPRequestHandler):
             if not doc or doc["ocr"] is None:
                 self._send_json({"error": "run /run_ocr first"}, 400)
                 return
+            gate = ingest_gate.check(doc["pdf_path"], ocr_entries=doc["ocr"])
+            if not gate["ok"]:
+                self._send_json({"rejected": True, "reason": gate["reason"]})
+                return
             result = extract_template(doc["ocr"], pdf_path=doc["pdf_path"])
+            ok, mand = ingest_gate.check_mandatory(result["fields"])
+            if not ok:
+                self._send_json({"rejected": True, "reason": "required field(s) missing: " + ", ".join(mand["missing"])})
+                return
             self._send_json(result)
             return
 

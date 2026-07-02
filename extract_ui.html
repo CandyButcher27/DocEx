@@ -74,6 +74,12 @@
   </div>
 </div>
 
+<div class="card" id="rejectCard" style="display:none; border:1px solid #e05c5c; background:#2a1518;">
+  <strong style="color:#ff8a8a;">Document rejected</strong>
+  <div id="rejectReason" style="color:#f0c0c0; margin-top:6px; font-size:14px;"></div>
+  <div style="color:var(--muted); margin-top:8px; font-size:12px;">Fix the issue and upload again.</div>
+</div>
+
 <div class="card" id="tableCard" style="display:none;">
   <table>
     <thead><tr><th style="width:38%">Field</th><th style="width:44%">Value</th><th style="width:18%">Confidence</th></tr></thead>
@@ -94,6 +100,8 @@ const downloadBtn = document.getElementById('downloadBtn');
 const progress = document.getElementById('progress');
 const status = document.getElementById('status');
 const legend = document.getElementById('legend');
+const rejectCard = document.getElementById('rejectCard');
+const rejectReason = document.getElementById('rejectReason');
 const tableCard = document.getElementById('tableCard');
 const jsonCard = document.getElementById('jsonCard');
 const resultsBody = document.getElementById('resultsBody');
@@ -248,6 +256,7 @@ function renderTable() {
 extractBtn.addEventListener('click', async () => {
   extractBtn.disabled = true;
   downloadBtn.style.display = 'none';
+  rejectCard.style.display = 'none';
   tableCard.style.display = 'none';
   jsonCard.style.display = 'none';
   legend.style.display = 'none';
@@ -270,6 +279,13 @@ extractBtn.addEventListener('click', async () => {
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     setStep('step-llm', 'done');
+
+    if (data.rejected) {
+      rejectReason.textContent = data.reason;
+      rejectCard.style.display = 'block';
+      setStatus('');
+      return;
+    }
 
     fieldsData = data.fields;
     renderTable();
