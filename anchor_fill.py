@@ -70,6 +70,16 @@ def _is_label(text, all_labels):
     return False
 
 
+def _same_row(bbox_a, bbox_b):
+    """True if the two boxes share most of their vertical extent (not just a sliver of pixel overlap)."""
+    ay0, ay1 = bbox_a[1], bbox_a[3]
+    by0, by1 = bbox_b[1], bbox_b[3]
+    overlap = min(ay1, by1) - max(ay0, by0)
+    if overlap <= 0:
+        return False
+    return overlap >= 0.5 * min(ay1 - ay0, by1 - by0)
+
+
 def _right_bound(anchor, ocr_entries, w):
     x0, y0, x1, y1 = anchor["bbox"]
     page = anchor.get("page", 0)
@@ -78,7 +88,7 @@ def _right_bound(anchor, ocr_entries, w):
         if e is anchor or e.get("page", 0) != page:
             continue
         ex0, ey0, ex1, ey1 = e["bbox"]
-        if ey0 < y1 and ey1 > y0 and ex0 > x1 + X_GAP:   # same row band, to the right
+        if _same_row(anchor["bbox"], e["bbox"]) and ex0 > x1 + X_GAP:   # same row band, to the right
             limit = min(limit, ex0 - X_GAP)
     return min(w, limit)
 
@@ -125,7 +135,7 @@ def anchor_fill(missing, ocr_entries, pdf_path, all_labels=None):
         row_right = [
             e for e in ocr_entries
             if e is not anchor and e.get("page", 0) == page_idx
-            and e["bbox"][1] < y1 and e["bbox"][3] > y0 and e["bbox"][0] > x1
+            and _same_row(anchor["bbox"], e["bbox"]) and e["bbox"][0] > x1
         ]
         row_right.sort(key=lambda e: e["bbox"][0])
         val_tokens = []

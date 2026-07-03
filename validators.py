@@ -98,7 +98,7 @@ def _resolve(path):
         return "date"
     if "income" in leaf or leaf == "loanAmount" or "premium" in leaf:
         return "amount"
-    if "account_number" in leaf:
+    if leaf == "account_number":
         return "digits"
     return None
 
