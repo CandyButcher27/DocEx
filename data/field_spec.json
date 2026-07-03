@@ -1,8 +1,96 @@
 {
-  "source": "GSS-SchemaSummary-V3(Mar-30) 2.xlsx",
-  "template_shape": "template.json",
+  "source": "master_schema.json + mapping_report.docx",
+  "template_shape": "data/template.json (= master_schema.json)",
   "not_found_token": "NOT_FOUND",
   "fields": [
+    {
+      "path": "mph_section.mph_branch_code",
+      "label": "Branch Code",
+      "section": "MPH Section",
+      "type": "alpha Numeric (20)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "mph_section.mph_branch_location",
+      "label": "Branch",
+      "section": "MPH Section",
+      "type": "Varchar(20)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "mph_section.mph_emp_id",
+      "label": "Employee ID",
+      "section": "MPH Section",
+      "type": "alpha Numeric (20)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "mph_section.mph_source_code",
+      "label": "Source Code",
+      "section": "MPH Section",
+      "type": "alpha Numeric (20)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "mph_section.rac_location",
+      "label": "RAC Location",
+      "section": "MPH Section",
+      "type": "Varchar (20)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "mph_section.seller_code",
+      "label": "Seller Code",
+      "section": "MPH Section",
+      "type": null,
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "loan_details.insurancePeriod_months",
+      "label": "Insurance Period Months",
+      "section": "Loan Details",
+      "type": "Numeric(3)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "loan_details.interest_payment_option",
+      "label": "Interest Payment Option (Yes/No)",
+      "section": "Loan Details",
+      "type": "Varchar(3)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "loan_details.loanAmount",
+      "label": "Loan Amount",
+      "section": "Loan Details",
+      "type": "9905600",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "loan_details.loanAppNumber",
+      "label": "Loan Application Number",
+      "section": "Loan Details",
+      "type": "Alpha Numeric (30)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "loan_details.loanTenure_months",
+      "label": "Loan Tenure (in months)",
+      "section": "Loan Details",
+      "type": "360",
+      "coded": false,
+      "repeat_group": null
+    },
     {
       "path": "loan_details.loan_account_number",
       "label": "Loan Account Number",
@@ -20,75 +108,43 @@
       "repeat_group": null
     },
     {
-      "path": "loan_details.loanAppNumber",
-      "label": "Loan Application Number",
-      "section": "Loan Details",
-      "type": "Alpha Numeric (30)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "loan_details.insurancePeriod_months",
-      "label": "Insurance Period Months",
-      "section": "Loan Details",
-      "type": "Numeric(3)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "loan_details.loanTenure_months",
-      "label": "Loan Tenure (in months)",
-      "section": "Loan Details",
-      "type": "360",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "loan_details.loanAmount",
-      "label": "Loan Amount",
-      "section": "Loan Details",
-      "type": "9905600",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "insured_details.first_name",
-      "label": "First Name",
-      "section": "Insured Details",
+      "path": "quote.loanDetails.coverOption",
+      "label": "Cover Type (Level/Reducing/Hybrid)",
+      "section": "Quote / Loan Details",
       "type": "Varchar(30)",
       "coded": false,
       "repeat_group": null
     },
     {
-      "path": "insured_details.middle_name",
-      "label": "Middle Name",
-      "section": "Insured Details",
-      "type": "Varchar(30)",
+      "path": "quote.loanDetails.hasFinancePremium",
+      "label": "Premium Financed by MPH (Yes/No)",
+      "section": "Quote / Loan Details",
+      "type": "Varchar(3)",
       "coded": false,
       "repeat_group": null
     },
     {
-      "path": "insured_details.last_name",
-      "label": "Last Name",
-      "section": "Insured Details",
-      "type": "Varchar(60)",
+      "path": "quote.loanDetails.sumAssured",
+      "label": "Base Benefit Sum Assured",
+      "section": "Quote / Loan Details",
+      "type": "Numeric",
       "coded": false,
       "repeat_group": null
     },
     {
-      "path": "insured_details.email_id",
-      "label": "Email ID",
+      "path": "insured_details.abha_number",
+      "label": "ABHA Number",
       "section": "Insured Details",
-      "type": "Varchar(50)",
+      "type": "Free text",
       "coded": false,
       "repeat_group": null
     },
     {
-      "path": "insured_details.sector",
-      "label": "Sector",
+      "path": "insured_details.annual_income",
+      "label": "Annual Income",
       "section": "Insured Details",
-      "type": "Enum(50)",
-      "coded": true,
+      "type": "Numeric(11)",
+      "coded": false,
       "repeat_group": null
     },
     {
@@ -134,6 +190,30 @@
       ]
     },
     {
+      "path": "insured_details.email_id",
+      "label": "Email ID",
+      "section": "Insured Details",
+      "type": "Varchar(50)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.first_name",
+      "label": "First Name",
+      "section": "Insured Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.form97_available",
+      "label": "Form 97 Available",
+      "section": "Insured Details",
+      "type": "Boolen(3)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
       "path": "insured_details.height_cm",
       "label": "Height",
       "section": "Insured Details",
@@ -142,36 +222,60 @@
       "repeat_group": null
     },
     {
-      "path": "insured_details.weight_kg",
-      "label": "Weight",
+      "path": "insured_details.last_name",
+      "label": "Last Name",
       "section": "Insured Details",
-      "type": null,
+      "type": "Varchar(60)",
       "coded": false,
       "repeat_group": null
     },
     {
-      "path": "insured_details.maritalStatus",
-      "label": "Marital Status",
+      "path": "insured_details.memberClassification",
+      "label": "Member Classification",
       "section": "Insured Details",
-      "type": "Enum(30)",
+      "type": null,
       "coded": true,
       "repeat_group": null
     },
     {
-      "path": "insured_details.pan_number",
-      "label": "PAN Number",
+      "path": "insured_details.middle_name",
+      "label": "Middle Name",
       "section": "Insured Details",
-      "type": "Varchar(10)",
+      "type": "Varchar(30)",
       "coded": false,
       "repeat_group": null
     },
     {
-      "path": "insured_details.abha_number",
-      "label": "ABHA Number",
+      "path": "insured_details.nationality",
+      "label": "Nationality Of The Insured Person",
       "section": "Insured Details",
-      "type": "Free text",
-      "coded": false,
-      "repeat_group": null
+      "type": "Varchar(25)",
+      "coded": true,
+      "repeat_group": null,
+      "allowed_values": [
+        "Indian",
+        "Non-Resident Indian",
+        "OCI/PIO",
+        "Others"
+      ],
+      "options": [
+        {
+          "text": "Indian",
+          "value": "NO001"
+        },
+        {
+          "text": "Non-Resident Indian",
+          "value": "NO002"
+        },
+        {
+          "text": "OCI/PIO",
+          "value": "NO003"
+        },
+        {
+          "text": "Others",
+          "value": "NO004"
+        }
+      ]
     },
     {
       "path": "insured_details.occupation",
@@ -226,43 +330,27 @@
       ]
     },
     {
-      "path": "insured_details.nationality",
-      "label": "Nationality Of The Insured Person",
+      "path": "insured_details.pan_available",
+      "label": "Pan Available Flag",
       "section": "Insured Details",
-      "type": "Varchar(25)",
-      "coded": true,
-      "repeat_group": null,
-      "allowed_values": [
-        "Indian",
-        "Non-Resident Indian",
-        "OCI/PIO",
-        "Others"
-      ],
-      "options": [
-        {
-          "text": "Indian",
-          "value": "NO001"
-        },
-        {
-          "text": "Non-Resident Indian",
-          "value": "NO002"
-        },
-        {
-          "text": "OCI/PIO",
-          "value": "NO003"
-        },
-        {
-          "text": "Others",
-          "value": "NO004"
-        }
-      ]
+      "type": "Boolen(3)",
+      "coded": false,
+      "repeat_group": null
     },
     {
-      "path": "insured_details.annual_income",
-      "label": "Annual Income",
+      "path": "insured_details.pan_number",
+      "label": "PAN Number",
       "section": "Insured Details",
-      "type": "Numeric(11)",
+      "type": "Varchar(10)",
       "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.sector",
+      "label": "Sector",
+      "section": "Insured Details",
+      "type": "Enum(50)",
+      "coded": true,
       "repeat_group": null
     },
     {
@@ -293,58 +381,108 @@
       ]
     },
     {
-      "path": "insured_details.pan_available",
-      "label": "Pan Available Flag",
+      "path": "insured_details.type_of_applicant",
+      "label": "Type of Applicant (Borrower type)",
       "section": "Insured Details",
-      "type": "Boolen(3)",
-      "coded": false,
-      "repeat_group": null
+      "type": "Varchar(30)",
+      "coded": true,
+      "repeat_group": null,
+      "allowed_values": [
+        "Borrower",
+        "coBorrower",
+        "Key person",
+        "Guarantor",
+        "Trustee"
+      ],
+      "options": [
+        {
+          "text": "Borrower",
+          "value": "APD001"
+        },
+        {
+          "text": "coBorrower",
+          "value": "APD002"
+        },
+        {
+          "text": "Key person",
+          "value": "APD003"
+        },
+        {
+          "text": "Guarantor",
+          "value": "APD004"
+        },
+        {
+          "text": "Trustee",
+          "value": "APD005"
+        }
+      ]
     },
     {
-      "path": "insured_details.form60_available",
-      "label": "Form 60 Available",
-      "section": "Insured Details",
-      "type": "Boolen(3)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "insured_details.memberClassification",
-      "label": "Member Classification",
+      "path": "insured_details.weight_kg",
+      "label": "Weight",
       "section": "Insured Details",
       "type": null,
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "quote.memberDetails.borrowerType",
+      "label": "Applicant Details (Borrower type)",
+      "section": "Quote / Member Details",
+      "type": "Varchar(30)",
       "coded": true,
-      "repeat_group": null
+      "repeat_group": null,
+      "allowed_values": [
+        "Borrower",
+        "coBorrower",
+        "Key person",
+        "Guarantor",
+        "Trustee"
+      ],
+      "options": [
+        {
+          "text": "Borrower",
+          "value": "APD001"
+        },
+        {
+          "text": "coBorrower",
+          "value": "APD002"
+        },
+        {
+          "text": "Key person",
+          "value": "APD003"
+        },
+        {
+          "text": "Guarantor",
+          "value": "APD004"
+        },
+        {
+          "text": "Trustee",
+          "value": "APD005"
+        }
+      ]
     },
     {
-      "path": "proposer_details.first_name",
-      "label": "First Name",
-      "section": "Proposer Details",
-      "type": "Varchar(30)",
+      "path": "quote.memberDetails.countryCode",
+      "label": "Country Code",
+      "section": "Quote / Member Details",
+      "type": "Varchar(5)",
       "coded": false,
       "repeat_group": null
     },
     {
-      "path": "proposer_details.middle_name",
-      "label": "Middle Name",
-      "section": "Proposer Details",
-      "type": "Varchar(30)",
+      "path": "quote.memberDetails.dob",
+      "label": "Date of Birth of Insured Member",
+      "section": "Quote / Member Details",
+      "type": "Date",
       "coded": false,
       "repeat_group": null
     },
     {
-      "path": "proposer_details.last_name",
-      "label": "Last Name",
-      "section": "Proposer Details",
-      "type": "Varchar(60)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "proposer_details.gender",
+      "path": "quote.memberDetails.gender",
       "label": "Gender",
-      "section": "Proposer Details",
-      "type": "Enum(15)",
+      "section": "Quote / Member Details",
+      "type": "Varchar(10)",
       "coded": true,
       "repeat_group": null,
       "allowed_values": [
@@ -368,126 +506,12 @@
       ]
     },
     {
-      "path": "proposer_details.date_of_birth",
-      "label": "Date of Birth",
-      "section": "Proposer Details",
-      "type": "Varchar(15)",
+      "path": "quote.memberDetails.mobileNumber",
+      "label": "Mobile No",
+      "section": "Quote / Member Details",
+      "type": "Numeric(10)",
       "coded": false,
       "repeat_group": null
-    },
-    {
-      "path": "proposer_details.relationship_with_insured",
-      "label": "Relationship with Insured",
-      "section": "Proposer Details",
-      "type": "Varchar",
-      "coded": true,
-      "repeat_group": null,
-      "allowed_values": [
-        "Spouse",
-        "Son",
-        "Daughter",
-        "Father",
-        "Mother",
-        "Brother",
-        "Sister",
-        "Father-in-law",
-        "Mother-in-law",
-        "Grand Father",
-        "Grand Mother",
-        "Grand Son",
-        "Grand Daughter",
-        "Other"
-      ],
-      "options": [
-        {
-          "text": "Spouse",
-          "value": "R001"
-        },
-        {
-          "text": "Son",
-          "value": "R002"
-        },
-        {
-          "text": "Daughter",
-          "value": "R003"
-        },
-        {
-          "text": "Father",
-          "value": "R004"
-        },
-        {
-          "text": "Mother",
-          "value": "R005"
-        },
-        {
-          "text": "Brother",
-          "value": "R006"
-        },
-        {
-          "text": "Sister",
-          "value": "R007"
-        },
-        {
-          "text": "Father-in-law",
-          "value": "R008"
-        },
-        {
-          "text": "Mother-in-law",
-          "value": "R009"
-        },
-        {
-          "text": "Grand Father",
-          "value": "R010"
-        },
-        {
-          "text": "Grand Mother",
-          "value": "R011"
-        },
-        {
-          "text": "Grand Son",
-          "value": "R012"
-        },
-        {
-          "text": "Grand Daughter",
-          "value": "R013"
-        },
-        {
-          "text": "Other",
-          "value": "R014"
-        }
-      ]
-    },
-    {
-      "path": "address_details[0].type",
-      "label": "Type",
-      "section": "Address Details",
-      "type": null,
-      "coded": true,
-      "repeat_group": "address_details",
-      "allowed_values": [
-        "Communication",
-        "Permanent",
-        "Office",
-        "Other"
-      ],
-      "options": [
-        {
-          "text": "Communication",
-          "value": "AD001"
-        },
-        {
-          "text": "Permanent",
-          "value": "AD002"
-        },
-        {
-          "text": "Office",
-          "value": "AD003"
-        },
-        {
-          "text": "Other",
-          "value": "AD004"
-        }
-      ]
     },
     {
       "path": "address_details[0].address_line_1",
@@ -514,6 +538,14 @@
       "repeat_group": "address_details"
     },
     {
+      "path": "address_details[0].city",
+      "label": "City",
+      "section": "Address Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "address_details"
+    },
+    {
       "path": "address_details[0].pin",
       "label": "Pin",
       "section": "Address Details",
@@ -522,10 +554,10 @@
       "repeat_group": "address_details"
     },
     {
-      "path": "address_details[0].city",
-      "label": "City",
+      "path": "address_details[0].same_as_communication",
+      "label": "Same as Communication Address",
       "section": "Address Details",
-      "type": "Varchar(30)",
+      "type": null,
       "coded": false,
       "repeat_group": "address_details"
     },
@@ -702,18 +734,388 @@
       ]
     },
     {
-      "path": "address_details[0].same_as_communication",
-      "label": "Same as Communication Address",
+      "path": "address_details[0].type",
+      "label": "Type",
       "section": "Address Details",
       "type": null,
-      "coded": false,
-      "repeat_group": "address_details"
+      "coded": true,
+      "repeat_group": "address_details",
+      "allowed_values": [
+        "Communication",
+        "Permanent",
+        "Office",
+        "Other"
+      ],
+      "options": [
+        {
+          "text": "Communication",
+          "value": "AD001"
+        },
+        {
+          "text": "Permanent",
+          "value": "AD002"
+        },
+        {
+          "text": "Office",
+          "value": "AD003"
+        },
+        {
+          "text": "Other",
+          "value": "AD004"
+        }
+      ]
     },
     {
-      "path": "nominee_details[0].id",
-      "label": "ID",
+      "path": "proposer_details.date_of_birth",
+      "label": "Date of Birth",
+      "section": "Proposer Details",
+      "type": "Varchar(15)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "proposer_details.first_name",
+      "label": "First Name",
+      "section": "Proposer Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "proposer_details.gender",
+      "label": "Gender",
+      "section": "Proposer Details",
+      "type": "Enum(15)",
+      "coded": true,
+      "repeat_group": null,
+      "allowed_values": [
+        "Male",
+        "Female",
+        "Transgender"
+      ],
+      "options": [
+        {
+          "text": "Male",
+          "value": "G001"
+        },
+        {
+          "text": "Female",
+          "value": "G002"
+        },
+        {
+          "text": "Transgender",
+          "value": "G003"
+        }
+      ]
+    },
+    {
+      "path": "proposer_details.last_name",
+      "label": "Last Name",
+      "section": "Proposer Details",
+      "type": "Varchar(60)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "proposer_details.middle_name",
+      "label": "Middle Name",
+      "section": "Proposer Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "proposer_details.relationship_with_insured",
+      "label": "Relationship with Insured",
+      "section": "Proposer Details",
+      "type": "Varchar",
+      "coded": true,
+      "repeat_group": null,
+      "allowed_values": [
+        "Spouse",
+        "Son",
+        "Daughter",
+        "Father",
+        "Mother",
+        "Brother",
+        "Sister",
+        "Father-in-law",
+        "Mother-in-law",
+        "Grand Father",
+        "Grand Mother",
+        "Grand Son",
+        "Grand Daughter",
+        "Other"
+      ],
+      "options": [
+        {
+          "text": "Spouse",
+          "value": "R001"
+        },
+        {
+          "text": "Son",
+          "value": "R002"
+        },
+        {
+          "text": "Daughter",
+          "value": "R003"
+        },
+        {
+          "text": "Father",
+          "value": "R004"
+        },
+        {
+          "text": "Mother",
+          "value": "R005"
+        },
+        {
+          "text": "Brother",
+          "value": "R006"
+        },
+        {
+          "text": "Sister",
+          "value": "R007"
+        },
+        {
+          "text": "Father-in-law",
+          "value": "R008"
+        },
+        {
+          "text": "Mother-in-law",
+          "value": "R009"
+        },
+        {
+          "text": "Grand Father",
+          "value": "R010"
+        },
+        {
+          "text": "Grand Mother",
+          "value": "R011"
+        },
+        {
+          "text": "Grand Son",
+          "value": "R012"
+        },
+        {
+          "text": "Grand Daughter",
+          "value": "R013"
+        },
+        {
+          "text": "Other",
+          "value": "R014"
+        }
+      ]
+    },
+    {
+      "path": "nominee_details[0].account_holder_name",
+      "label": "Account Holder Name",
       "section": "Nominee Details",
-      "type": null,
+      "type": "Varchar(60)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].account_number",
+      "label": "Account Number",
+      "section": "Nominee Details",
+      "type": "Numeric(20)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].address_line_1",
+      "label": "Address Line 1",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].address_line_2",
+      "label": "Address Line 2",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].address_line_3",
+      "label": "Address Line 3",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].appointee_dob",
+      "label": "Appointee Dob",
+      "section": "Nominee Details",
+      "type": "Date",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].appointee_first_name",
+      "label": "Appointee First Name",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].appointee_gender",
+      "label": "Appointee Gender",
+      "section": "Nominee Details",
+      "type": "Enum(15)",
+      "coded": true,
+      "repeat_group": "nominee_details",
+      "allowed_values": [
+        "Male",
+        "Female",
+        "Transgender"
+      ],
+      "options": [
+        {
+          "text": "Male",
+          "value": "G001"
+        },
+        {
+          "text": "Female",
+          "value": "G002"
+        },
+        {
+          "text": "Transgender",
+          "value": "G003"
+        }
+      ]
+    },
+    {
+      "path": "nominee_details[0].appointee_last_name",
+      "label": "Appointee Last Name",
+      "section": "Nominee Details",
+      "type": "Varchar(60)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].appointee_middle_name",
+      "label": "Appointee Middle Name",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].appointee_relationship_with_nominee",
+      "label": "Appointee Relationship With Nominee",
+      "section": "Nominee Details",
+      "type": "Enum(30)",
+      "coded": true,
+      "repeat_group": "nominee_details",
+      "allowed_values": [
+        "Spouse",
+        "Son",
+        "Daughter",
+        "Father",
+        "Mother",
+        "Brother",
+        "Sister",
+        "Father-in-law",
+        "Mother-in-law",
+        "Grand Father",
+        "Grand Mother",
+        "Grand Son",
+        "Grand Daughter",
+        "Other"
+      ],
+      "options": [
+        {
+          "text": "Spouse",
+          "value": "R001"
+        },
+        {
+          "text": "Son",
+          "value": "R002"
+        },
+        {
+          "text": "Daughter",
+          "value": "R003"
+        },
+        {
+          "text": "Father",
+          "value": "R004"
+        },
+        {
+          "text": "Mother",
+          "value": "R005"
+        },
+        {
+          "text": "Brother",
+          "value": "R006"
+        },
+        {
+          "text": "Sister",
+          "value": "R007"
+        },
+        {
+          "text": "Father-in-law",
+          "value": "R008"
+        },
+        {
+          "text": "Mother-in-law",
+          "value": "R009"
+        },
+        {
+          "text": "Grand Father",
+          "value": "R010"
+        },
+        {
+          "text": "Grand Mother",
+          "value": "R011"
+        },
+        {
+          "text": "Grand Son",
+          "value": "R012"
+        },
+        {
+          "text": "Grand Daughter",
+          "value": "R013"
+        },
+        {
+          "text": "Other",
+          "value": "R014"
+        }
+      ]
+    },
+    {
+      "path": "nominee_details[0].bank_branch",
+      "label": "Bank Branch",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].city",
+      "label": "City",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].date_of_birth",
+      "label": "Date of Birth",
+      "section": "Nominee Details",
+      "type": "Date",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].email_id",
+      "label": "Email ID",
+      "section": "Nominee Details",
+      "type": "Varchar(50)",
       "coded": false,
       "repeat_group": "nominee_details"
     },
@@ -722,22 +1124,6 @@
       "label": "First Name",
       "section": "Nominee Details",
       "type": "Varchar(30)",
-      "coded": false,
-      "repeat_group": "nominee_details"
-    },
-    {
-      "path": "nominee_details[0].middle_name",
-      "label": "Middle Name",
-      "section": "Nominee Details",
-      "type": "Varchar(30)",
-      "coded": false,
-      "repeat_group": "nominee_details"
-    },
-    {
-      "path": "nominee_details[0].last_name",
-      "label": "Last Name",
-      "section": "Nominee Details",
-      "type": "Varchar(60)",
       "coded": false,
       "repeat_group": "nominee_details"
     },
@@ -769,10 +1155,34 @@
       ]
     },
     {
-      "path": "nominee_details[0].date_of_birth",
-      "label": "Date of Birth",
+      "path": "nominee_details[0].id",
+      "label": "ID",
       "section": "Nominee Details",
-      "type": "Date",
+      "type": null,
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].ifsc_code",
+      "label": "IFSC Code",
+      "section": "Nominee Details",
+      "type": "Alpha Numeric (11)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].last_name",
+      "label": "Last Name",
+      "section": "Nominee Details",
+      "type": "Varchar(60)",
+      "coded": false,
+      "repeat_group": "nominee_details"
+    },
+    {
+      "path": "nominee_details[0].middle_name",
+      "label": "Middle Name",
+      "section": "Nominee Details",
+      "type": "Varchar(30)",
       "coded": false,
       "repeat_group": "nominee_details"
     },
@@ -972,34 +1382,18 @@
       "repeat_group": "nominee_details"
     },
     {
-      "path": "nominee_details[0].email_id",
-      "label": "Email ID",
+      "path": "nominee_details[0].other_relation",
+      "label": "Other Relation",
       "section": "Nominee Details",
-      "type": "Varchar(50)",
+      "type": null,
       "coded": false,
       "repeat_group": "nominee_details"
     },
     {
-      "path": "nominee_details[0].address_line_1",
-      "label": "Address Line 1",
+      "path": "nominee_details[0].percentage_share",
+      "label": "Percentage Share",
       "section": "Nominee Details",
-      "type": "Varchar(30)",
-      "coded": false,
-      "repeat_group": "nominee_details"
-    },
-    {
-      "path": "nominee_details[0].address_line_2",
-      "label": "Address Line 2",
-      "section": "Nominee Details",
-      "type": "Varchar(30)",
-      "coded": false,
-      "repeat_group": "nominee_details"
-    },
-    {
-      "path": "nominee_details[0].address_line_3",
-      "label": "Address Line 3",
-      "section": "Nominee Details",
-      "type": "Varchar(30)",
+      "type": "Numeric(3)",
       "coded": false,
       "repeat_group": "nominee_details"
     },
@@ -1012,12 +1406,86 @@
       "repeat_group": "nominee_details"
     },
     {
-      "path": "nominee_details[0].city",
-      "label": "City",
+      "path": "nominee_details[0].relationship_with_life_insured",
+      "label": "Relationship With Life Insured",
       "section": "Nominee Details",
-      "type": "Varchar(30)",
-      "coded": false,
-      "repeat_group": "nominee_details"
+      "type": "Enum(30)",
+      "coded": true,
+      "repeat_group": "nominee_details",
+      "allowed_values": [
+        "Spouse",
+        "Son",
+        "Daughter",
+        "Father",
+        "Mother",
+        "Brother",
+        "Sister",
+        "Father-in-law",
+        "Mother-in-law",
+        "Grand Father",
+        "Grand Mother",
+        "Grand Son",
+        "Grand Daughter",
+        "Other"
+      ],
+      "options": [
+        {
+          "text": "Spouse",
+          "value": "R001"
+        },
+        {
+          "text": "Son",
+          "value": "R002"
+        },
+        {
+          "text": "Daughter",
+          "value": "R003"
+        },
+        {
+          "text": "Father",
+          "value": "R004"
+        },
+        {
+          "text": "Mother",
+          "value": "R005"
+        },
+        {
+          "text": "Brother",
+          "value": "R006"
+        },
+        {
+          "text": "Sister",
+          "value": "R007"
+        },
+        {
+          "text": "Father-in-law",
+          "value": "R008"
+        },
+        {
+          "text": "Mother-in-law",
+          "value": "R009"
+        },
+        {
+          "text": "Grand Father",
+          "value": "R010"
+        },
+        {
+          "text": "Grand Mother",
+          "value": "R011"
+        },
+        {
+          "text": "Grand Son",
+          "value": "R012"
+        },
+        {
+          "text": "Grand Daughter",
+          "value": "R013"
+        },
+        {
+          "text": "Other",
+          "value": "R014"
+        }
+      ]
     },
     {
       "path": "nominee_details[0].state",
@@ -1192,777 +1660,12 @@
       ]
     },
     {
-      "path": "nominee_details[0].bank_branch",
-      "label": "Bank Branch",
-      "section": "Nominee Details",
-      "type": "Varchar(30)",
-      "coded": false,
-      "repeat_group": "nominee_details"
-    },
-    {
-      "path": "nominee_details[0].account_holder_name",
-      "label": "Account Holder Name",
-      "section": "Nominee Details",
-      "type": "Varchar(60)",
-      "coded": false,
-      "repeat_group": "nominee_details"
-    },
-    {
-      "path": "nominee_details[0].account_number",
-      "label": "Account Number",
-      "section": "Nominee Details",
-      "type": "Numeric(20)",
-      "coded": false,
-      "repeat_group": "nominee_details"
-    },
-    {
-      "path": "nominee_details[0].ifsc_code",
-      "label": "IFSC Code",
-      "section": "Nominee Details",
-      "type": "Alpha Numeric (11)",
-      "coded": false,
-      "repeat_group": "nominee_details"
-    },
-    {
-      "path": "nominee_details[0].relationship_with_life_insured",
-      "label": "Relationship With Life Insured",
-      "section": "Nominee Details",
-      "type": "Enum(30)",
-      "coded": true,
-      "repeat_group": "nominee_details",
-      "allowed_values": [
-        "Spouse",
-        "Son",
-        "Daughter",
-        "Father",
-        "Mother",
-        "Brother",
-        "Sister",
-        "Father-in-law",
-        "Mother-in-law",
-        "Grand Father",
-        "Grand Mother",
-        "Grand Son",
-        "Grand Daughter",
-        "Other"
-      ],
-      "options": [
-        {
-          "text": "Spouse",
-          "value": "R001"
-        },
-        {
-          "text": "Son",
-          "value": "R002"
-        },
-        {
-          "text": "Daughter",
-          "value": "R003"
-        },
-        {
-          "text": "Father",
-          "value": "R004"
-        },
-        {
-          "text": "Mother",
-          "value": "R005"
-        },
-        {
-          "text": "Brother",
-          "value": "R006"
-        },
-        {
-          "text": "Sister",
-          "value": "R007"
-        },
-        {
-          "text": "Father-in-law",
-          "value": "R008"
-        },
-        {
-          "text": "Mother-in-law",
-          "value": "R009"
-        },
-        {
-          "text": "Grand Father",
-          "value": "R010"
-        },
-        {
-          "text": "Grand Mother",
-          "value": "R011"
-        },
-        {
-          "text": "Grand Son",
-          "value": "R012"
-        },
-        {
-          "text": "Grand Daughter",
-          "value": "R013"
-        },
-        {
-          "text": "Other",
-          "value": "R014"
-        }
-      ]
-    },
-    {
-      "path": "nominee_details[0].other_relation",
-      "label": "Other Relation",
-      "section": "Nominee Details",
-      "type": null,
-      "coded": false,
-      "repeat_group": "nominee_details"
-    },
-    {
-      "path": "nominee_details[0].percentage_share",
-      "label": "Percentage Share",
-      "section": "Nominee Details",
-      "type": "Numeric(3)",
-      "coded": false,
-      "repeat_group": "nominee_details"
-    },
-    {
-      "path": "nominee_details[0].appointee_first_name",
-      "label": "Appointee First Name",
-      "section": "Nominee Details",
-      "type": "Varchar(30)",
-      "coded": false,
-      "repeat_group": "nominee_details"
-    },
-    {
-      "path": "nominee_details[0].appointee_middle_name",
-      "label": "Appointee Middle Name",
-      "section": "Nominee Details",
-      "type": "Varchar(30)",
-      "coded": false,
-      "repeat_group": "nominee_details"
-    },
-    {
-      "path": "nominee_details[0].appointee_last_name",
-      "label": "Appointee Last Name",
-      "section": "Nominee Details",
-      "type": "Varchar(60)",
-      "coded": false,
-      "repeat_group": "nominee_details"
-    },
-    {
-      "path": "nominee_details[0].appointee_gender",
-      "label": "Appointee Gender",
-      "section": "Nominee Details",
-      "type": "Enum(15)",
-      "coded": true,
-      "repeat_group": "nominee_details",
-      "allowed_values": [
-        "Male",
-        "Female",
-        "Transgender"
-      ],
-      "options": [
-        {
-          "text": "Male",
-          "value": "G001"
-        },
-        {
-          "text": "Female",
-          "value": "G002"
-        },
-        {
-          "text": "Transgender",
-          "value": "G003"
-        }
-      ]
-    },
-    {
-      "path": "nominee_details[0].appointee_dob",
-      "label": "Appointee Dob",
-      "section": "Nominee Details",
-      "type": "Date",
-      "coded": false,
-      "repeat_group": "nominee_details"
-    },
-    {
-      "path": "nominee_details[0].appointee_relationship_with_nominee",
-      "label": "Appointee Relationship With Nominee",
-      "section": "Nominee Details",
-      "type": "Enum(30)",
-      "coded": true,
-      "repeat_group": "nominee_details",
-      "allowed_values": [
-        "Spouse",
-        "Son",
-        "Daughter",
-        "Father",
-        "Mother",
-        "Brother",
-        "Sister",
-        "Father-in-law",
-        "Mother-in-law",
-        "Grand Father",
-        "Grand Mother",
-        "Grand Son",
-        "Grand Daughter",
-        "Other"
-      ],
-      "options": [
-        {
-          "text": "Spouse",
-          "value": "R001"
-        },
-        {
-          "text": "Son",
-          "value": "R002"
-        },
-        {
-          "text": "Daughter",
-          "value": "R003"
-        },
-        {
-          "text": "Father",
-          "value": "R004"
-        },
-        {
-          "text": "Mother",
-          "value": "R005"
-        },
-        {
-          "text": "Brother",
-          "value": "R006"
-        },
-        {
-          "text": "Sister",
-          "value": "R007"
-        },
-        {
-          "text": "Father-in-law",
-          "value": "R008"
-        },
-        {
-          "text": "Mother-in-law",
-          "value": "R009"
-        },
-        {
-          "text": "Grand Father",
-          "value": "R010"
-        },
-        {
-          "text": "Grand Mother",
-          "value": "R011"
-        },
-        {
-          "text": "Grand Son",
-          "value": "R012"
-        },
-        {
-          "text": "Grand Daughter",
-          "value": "R013"
-        },
-        {
-          "text": "Other",
-          "value": "R014"
-        }
-      ]
-    },
-    {
-      "path": "declaration[0].code",
-      "label": "Code",
-      "section": "Declaration",
-      "type": null,
-      "coded": false,
-      "repeat_group": "declaration"
-    },
-    {
-      "path": "declaration[0].answer",
+      "path": "medical_lifestyle_questions[0].answer",
       "label": "Answer",
-      "section": "Declaration",
-      "type": "Boolen(3)",
-      "coded": false,
-      "repeat_group": "declaration"
-    },
-    {
-      "path": "declaration[0].isAnswer",
-      "label": "is Answered",
-      "section": "Declaration",
-      "type": "Free text",
-      "coded": false,
-      "repeat_group": "declaration"
-    },
-    {
-      "path": "mph_section.mph_emp_id",
-      "label": "Employee ID",
-      "section": "MPH Section",
-      "type": "alpha Numeric (20)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "mph_section.mph_branch_code",
-      "label": "Branch Code",
-      "section": "MPH Section",
-      "type": "alpha Numeric (20)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "mph_section.mph_source_code",
-      "label": "Source Code",
-      "section": "MPH Section",
-      "type": "alpha Numeric (20)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "mph_section.mph_branch_location",
-      "label": "Branch",
-      "section": "MPH Section",
-      "type": "Varchar(20)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "mph_section.mli_sales_manager_code",
-      "label": "SM Code",
-      "section": "MPH Section",
-      "type": "alpha Numeric (20)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "mph_section.mli_sales_manager_name",
-      "label": "SM Name",
-      "section": "MPH Section",
-      "type": "Varchar(80)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "mph_section.rm_code",
-      "label": "RM Code",
-      "section": "MPH Section",
-      "type": "Varchar(80)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "mph_section.rm_name",
-      "label": "RM Name",
-      "section": "MPH Section",
-      "type": "alpha Numeric (20)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "mph_section.rac_location",
-      "label": "RAC Location",
-      "section": "MPH Section",
-      "type": "Varchar (20)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "mph_section.seller_code",
-      "label": "Seller Code",
-      "section": "MPH Section",
+      "section": "Medical Questions",
       "type": null,
       "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "mph_section.seller_mobileNumber",
-      "label": "Seller Mobile Number",
-      "section": "MPH Section",
-      "type": null,
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "mph_section.seller_mailID",
-      "label": "Seller Mail ID",
-      "section": "MPH Section",
-      "type": null,
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "disability_declarant.first_name",
-      "label": "First Name",
-      "section": "Disability Declaration",
-      "type": "Varchar(30)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "disability_declarant.middle_name",
-      "label": "Middle Name",
-      "section": "Disability Declaration",
-      "type": "Varchar(30)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "disability_declarant.last_name",
-      "label": "Last Name",
-      "section": "Disability Declaration",
-      "type": "Varchar(60)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "disability_declarant.mobile_number",
-      "label": "Mobile Number",
-      "section": "Disability Declaration",
-      "type": "Numeric(10)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "disability_declarant.address",
-      "label": "Declarant Address",
-      "section": "Disability Declaration",
-      "type": "Varchar(100)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "disability_declarant.relationship_with_prospect",
-      "label": "Relationship with Prospect",
-      "section": "Disability Declaration",
-      "type": "Enum(15)",
-      "coded": true,
-      "repeat_group": null,
-      "allowed_values": [
-        "Spouse",
-        "Son",
-        "Daughter",
-        "Father",
-        "Mother",
-        "Brother",
-        "Sister",
-        "Father-in-law",
-        "Mother-in-law",
-        "Grand Father",
-        "Grand Mother",
-        "Grand Son",
-        "Grand Daughter",
-        "Other"
-      ],
-      "options": [
-        {
-          "text": "Spouse",
-          "value": "R001"
-        },
-        {
-          "text": "Son",
-          "value": "R002"
-        },
-        {
-          "text": "Daughter",
-          "value": "R003"
-        },
-        {
-          "text": "Father",
-          "value": "R004"
-        },
-        {
-          "text": "Mother",
-          "value": "R005"
-        },
-        {
-          "text": "Brother",
-          "value": "R006"
-        },
-        {
-          "text": "Sister",
-          "value": "R007"
-        },
-        {
-          "text": "Father-in-law",
-          "value": "R008"
-        },
-        {
-          "text": "Mother-in-law",
-          "value": "R009"
-        },
-        {
-          "text": "Grand Father",
-          "value": "R010"
-        },
-        {
-          "text": "Grand Mother",
-          "value": "R011"
-        },
-        {
-          "text": "Grand Son",
-          "value": "R012"
-        },
-        {
-          "text": "Grand Daughter",
-          "value": "R013"
-        },
-        {
-          "text": "Other",
-          "value": "R014"
-        }
-      ]
-    },
-    {
-      "path": "disability_declarant.relationship_others",
-      "label": "Relationship (Others)",
-      "section": "Disability Declaration",
-      "type": "Varchar(100)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "vernacular_declarant.first_name",
-      "label": "First Name",
-      "section": "Vernacular Declaration",
-      "type": "Varchar(30)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "vernacular_declarant.middle_name",
-      "label": "Middle Name",
-      "section": "Vernacular Declaration",
-      "type": "Varchar(30)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "vernacular_declarant.last_name",
-      "label": "Last Name",
-      "section": "Vernacular Declaration",
-      "type": "Varchar(60)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "vernacular_declarant.declarant_contact",
-      "label": "Mobile Number",
-      "section": "Vernacular Declaration",
-      "type": null,
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "vernacular_declarant.address",
-      "label": "Declarant Address",
-      "section": "Vernacular Declaration",
-      "type": "Varchar(100)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "vernacular_declarant.declarant_relation",
-      "label": "Relationship with Prospect",
-      "section": "Vernacular Declaration",
-      "type": null,
-      "coded": true,
-      "repeat_group": null,
-      "allowed_values": [
-        "Spouse",
-        "Son",
-        "Daughter",
-        "Father",
-        "Mother",
-        "Brother",
-        "Sister",
-        "Father-in-law",
-        "Mother-in-law",
-        "Grand Father",
-        "Grand Mother",
-        "Grand Son",
-        "Grand Daughter",
-        "Other"
-      ],
-      "options": [
-        {
-          "text": "Spouse",
-          "value": "R001"
-        },
-        {
-          "text": "Son",
-          "value": "R002"
-        },
-        {
-          "text": "Daughter",
-          "value": "R003"
-        },
-        {
-          "text": "Father",
-          "value": "R004"
-        },
-        {
-          "text": "Mother",
-          "value": "R005"
-        },
-        {
-          "text": "Brother",
-          "value": "R006"
-        },
-        {
-          "text": "Sister",
-          "value": "R007"
-        },
-        {
-          "text": "Father-in-law",
-          "value": "R008"
-        },
-        {
-          "text": "Mother-in-law",
-          "value": "R009"
-        },
-        {
-          "text": "Grand Father",
-          "value": "R010"
-        },
-        {
-          "text": "Grand Mother",
-          "value": "R011"
-        },
-        {
-          "text": "Grand Son",
-          "value": "R012"
-        },
-        {
-          "text": "Grand Daughter",
-          "value": "R013"
-        },
-        {
-          "text": "Other",
-          "value": "R014"
-        }
-      ]
-    },
-    {
-      "path": "vernacular_declarant.relationship_others",
-      "label": "Relationship (Others)",
-      "section": "Vernacular Declaration",
-      "type": null,
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "vernacular_declarant.language",
-      "label": "Language",
-      "section": "Vernacular Declaration",
-      "type": "Varchar(30)",
-      "coded": true,
-      "repeat_group": null,
-      "allowed_values": [
-        "Hindi",
-        "English",
-        "Marathi",
-        "Gujarati",
-        "Tamil",
-        "Telugu",
-        "Kannada",
-        "Malayalam",
-        "Bengali",
-        "Punjabi",
-        "Odia",
-        "Assamese",
-        "Urdu",
-        "Other"
-      ],
-      "options": [
-        {
-          "text": "Hindi",
-          "value": "L001"
-        },
-        {
-          "text": "English",
-          "value": "L002"
-        },
-        {
-          "text": "Marathi",
-          "value": "L003"
-        },
-        {
-          "text": "Gujarati",
-          "value": "L004"
-        },
-        {
-          "text": "Tamil",
-          "value": "L005"
-        },
-        {
-          "text": "Telugu",
-          "value": "L006"
-        },
-        {
-          "text": "Kannada",
-          "value": "L007"
-        },
-        {
-          "text": "Malayalam",
-          "value": "L008"
-        },
-        {
-          "text": "Bengali",
-          "value": "L009"
-        },
-        {
-          "text": "Punjabi",
-          "value": "L010"
-        },
-        {
-          "text": "Odia",
-          "value": "L011"
-        },
-        {
-          "text": "Assamese",
-          "value": "L012"
-        },
-        {
-          "text": "Urdu",
-          "value": "L013"
-        },
-        {
-          "text": "Other",
-          "value": "L014"
-        }
-      ]
-    },
-    {
-      "path": "otp_details[0].otp_type",
-      "label": "OTP Type",
-      "section": "OTP Details",
-      "type": null,
-      "coded": true,
-      "repeat_group": "otp_details"
-    },
-    {
-      "path": "payment_details.payment_status",
-      "label": "Payment Status",
-      "section": "Payment Details",
-      "type": "Varchar",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "payment_details.premium_paid",
-      "label": "Premium Paid",
-      "section": "Payment Details",
-      "type": "Numeric(20)",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "payment_details.payment_date",
-      "label": "Payment Date",
-      "section": "Payment Details",
-      "type": "Date",
-      "coded": false,
-      "repeat_group": null
-    },
-    {
-      "path": "payment_details.transaction_number",
-      "label": "Transaction Number",
-      "section": "Payment Details",
-      "type": "Alpha Numeric",
-      "coded": false,
-      "repeat_group": null
+      "repeat_group": "medical_lifestyle_questions"
     },
     {
       "path": "medical_lifestyle_questions[0].code",
@@ -2022,8 +1725,8 @@
       ]
     },
     {
-      "path": "medical_lifestyle_questions[0].answer",
-      "label": "Answer",
+      "path": "medical_lifestyle_questions[0].description",
+      "label": "Description",
       "section": "Medical Questions",
       "type": null,
       "coded": false,
@@ -2038,108 +1741,76 @@
       "repeat_group": "medical_lifestyle_questions"
     },
     {
-      "path": "medical_lifestyle_questions[0].description",
-      "label": "Description",
-      "section": "Medical Questions",
+      "path": "declaration[0].answer",
+      "label": "Answer",
+      "section": "Declaration",
+      "type": "Boolen(3)",
+      "coded": false,
+      "repeat_group": "declaration"
+    },
+    {
+      "path": "declaration[0].code",
+      "label": "Code",
+      "section": "Declaration",
       "type": null,
       "coded": false,
-      "repeat_group": "medical_lifestyle_questions"
+      "repeat_group": "declaration"
     },
     {
-      "path": "documents[0].documentName",
-      "label": "Document Name",
-      "section": "Documents",
-      "type": null,
-      "coded": true,
-      "repeat_group": "documents"
+      "path": "declaration[0].isAnswer",
+      "label": "is Answered",
+      "section": "Declaration",
+      "type": "Free text",
+      "coded": false,
+      "repeat_group": "declaration"
     },
     {
-      "path": "insured_details.gender",
-      "label": "Gender",
-      "section": "Insured Details",
-      "type": "Varchar(10)",
-      "coded": true,
-      "repeat_group": null,
-      "allowed_values": [
-        "Male",
-        "Female",
-        "Transgender"
-      ],
-      "options": [
-        {
-          "text": "Male",
-          "value": "G001"
-        },
-        {
-          "text": "Female",
-          "value": "G002"
-        },
-        {
-          "text": "Transgender",
-          "value": "G003"
-        }
-      ]
-    },
-    {
-      "path": "insured_details.date_of_birth",
-      "label": "Date of Birth",
-      "section": "Insured Details",
+      "path": "payment_details.payment_date",
+      "label": "Payment Date",
+      "section": "Payment Details",
       "type": "Date",
       "coded": false,
       "repeat_group": null
     },
     {
-      "path": "insured_details.mobile_no",
-      "label": "Mobile Number",
-      "section": "Insured Details",
-      "type": "Numeric(10)",
+      "path": "payment_details.payment_status",
+      "label": "Payment Status",
+      "section": "Payment Details",
+      "type": "Varchar",
       "coded": false,
       "repeat_group": null
     },
     {
-      "path": "insured_details.countryCode",
-      "label": "Country Code",
-      "section": "Insured Details",
-      "type": "Varchar(5)",
+      "path": "payment_details.premium_paid",
+      "label": "Premium Paid",
+      "section": "Payment Details",
+      "type": "Numeric(20)",
       "coded": false,
       "repeat_group": null
     },
     {
-      "path": "insured_details.applicant_details",
-      "label": "Type of Applicant",
-      "section": "Insured Details",
-      "type": "Varchar(30)",
+      "path": "payment_details.transaction_number",
+      "label": "Transaction Number",
+      "section": "Payment Details",
+      "type": "Alpha Numeric",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "premium",
+      "label": "Premium Amount",
+      "section": "Payment Details",
+      "type": "Numeric",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "otp_details[0].otp_type",
+      "label": "OTP Type",
+      "section": "OTP Details",
+      "type": null,
       "coded": true,
-      "repeat_group": null,
-      "allowed_values": [
-        "Borrower",
-        "coBorrower",
-        "Key person",
-        "Guarantor",
-        "Trustee"
-      ],
-      "options": [
-        {
-          "text": "Borrower",
-          "value": "APD001"
-        },
-        {
-          "text": "coBorrower",
-          "value": "APD002"
-        },
-        {
-          "text": "Key person",
-          "value": "APD003"
-        },
-        {
-          "text": "Guarantor",
-          "value": "APD004"
-        },
-        {
-          "text": "Trustee",
-          "value": "APD005"
-        }
-      ]
+      "repeat_group": "otp_details"
     }
   ]
 }

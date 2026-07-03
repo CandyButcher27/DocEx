@@ -42,7 +42,7 @@ def _blank(node):
 
 
 def blank_skeleton():
-    """Deep copy of data/template.json with every scalar leaf blanked to ''."""
+    """Deep copy of data/template.json (master schema shape) with every scalar leaf blanked to ''."""
     global _blanked_template
     if _blanked_template is None:
         template = json.loads(TEMPLATE_FILE.read_text(encoding="utf-8"))
@@ -72,8 +72,8 @@ def _trunc(s, n=70):
 VARIABLE_GROUPS = ("nominee_details", "address_details")
 FIXED_GROUPS = ("medical_lifestyle_questions", "declaration")
 SKIP_GROUPS = ("documents", "otp_details")
-SUSPECT_SECTIONS = ("proposer_details", "disability_declarant", "vernacular_declarant", "mph_section")
-NAME_GATED_SECTIONS = ("proposer_details", "disability_declarant", "vernacular_declarant")
+SUSPECT_SECTIONS = ("proposer_details", "mph_section")
+NAME_GATED_SECTIONS = ("proposer_details",)
 MAX_INSTANCES = 10
 YESNO_OPTIONS = [{"text": "Yes", "value": "Yes"}, {"text": "No", "value": "No"}]
 
@@ -215,26 +215,25 @@ def _decode(spec, flat):
 
 def assemble(flat):
     root = blank_skeleton()
-    data_root = root["data"]
-    group_templates = {k: copy.deepcopy(v[0]) for k, v in data_root.items() if isinstance(v, list) and v and isinstance(v[0], dict)}
+    group_templates = {k: copy.deepcopy(v[0]) for k, v in root.items() if isinstance(v, list) and v and isinstance(v[0], dict)}
     for path, val in flat.items():
         if val == "NOT_FOUND":
             continue
-        _set_path(data_root, path, val, group_templates)
-    _finalize_fixed(data_root)
+        _set_path(root, path, val, group_templates)
+    _finalize_fixed(root)
     return root
 
 
-def _finalize_fixed(data_root):
+def _finalize_fixed(root):
     for g in FIXED_GROUPS:
-        arr = data_root.get(g)
+        arr = root.get(g)
         if isinstance(arr, list):
             for e in arr:
                 e["answer"] = e.get("answer", "")
                 e["isAnswer"] = e["answer"] == "Yes"
                 if g == "medical_lifestyle_questions":
                     e["description"] = e.get("description", "")
-    return data_root
+    return root
 
 
 def _set_path(root, path, val, group_templates=None):
