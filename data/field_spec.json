@@ -2052,6 +2052,94 @@
       "type": null,
       "coded": true,
       "repeat_group": "documents"
+    },
+    {
+      "path": "insured_details.gender",
+      "label": "Gender",
+      "section": "Insured Details",
+      "type": "Varchar(10)",
+      "coded": true,
+      "repeat_group": null,
+      "allowed_values": [
+        "Male",
+        "Female",
+        "Transgender"
+      ],
+      "options": [
+        {
+          "text": "Male",
+          "value": "G001"
+        },
+        {
+          "text": "Female",
+          "value": "G002"
+        },
+        {
+          "text": "Transgender",
+          "value": "G003"
+        }
+      ]
+    },
+    {
+      "path": "insured_details.date_of_birth",
+      "label": "Date of Birth",
+      "section": "Insured Details",
+      "type": "Date",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.mobile_no",
+      "label": "Mobile Number",
+      "section": "Insured Details",
+      "type": "Numeric(10)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.countryCode",
+      "label": "Country Code",
+      "section": "Insured Details",
+      "type": "Varchar(5)",
+      "coded": false,
+      "repeat_group": null
+    },
+    {
+      "path": "insured_details.applicant_details",
+      "label": "Type of Applicant",
+      "section": "Insured Details",
+      "type": "Varchar(30)",
+      "coded": true,
+      "repeat_group": null,
+      "allowed_values": [
+        "Borrower",
+        "coBorrower",
+        "Key person",
+        "Guarantor",
+        "Trustee"
+      ],
+      "options": [
+        {
+          "text": "Borrower",
+          "value": "APD001"
+        },
+        {
+          "text": "coBorrower",
+          "value": "APD002"
+        },
+        {
+          "text": "Key person",
+          "value": "APD003"
+        },
+        {
+          "text": "Guarantor",
+          "value": "APD004"
+        },
+        {
+          "text": "Trustee",
+          "value": "APD005"
+        }
+      ]
     }
   ]
 }

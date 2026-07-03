@@ -27,6 +27,7 @@ ALIASES = {
     "insured_details.weight_kg": ["Weight in kgs", "Weight"],
     "insured_details.annual_income": ["Annual Income"],
     "insured_details.pan_number": ["PAN Number", "PAN No"],
+    "insured_details.mobile_no": ["Mobile Number", "Mobile No"],
     "payment_details.premium_paid": ["Premium Amount", "Premium Paid"],
     "payment_details.payment_date": ["Payment Date"],
     "proposer_details.date_of_birth": ["Date of Birth"],

@@ -1,3 +1,4 @@
+import copy
 import json
 import re
 from pathlib import Path
@@ -9,9 +10,11 @@ from validators import validate
 ROOT = Path(__file__).parent
 SPEC_FILE = ROOT / "data" / "field_spec.json"
 CODE_MAPPER_FILE = ROOT / "data" / "code_mapper.json"
+TEMPLATE_FILE = ROOT / "data" / "template.json"
 
 _spec = None
 _mapper = None
+_blanked_template = None
 
 
 def load_spec():
@@ -26,6 +29,25 @@ def load_mapper():
     if _mapper is None:
         _mapper = json.loads(CODE_MAPPER_FILE.read_text(encoding="utf-8"))
     return _mapper
+
+
+def _blank(node):
+    if isinstance(node, dict):
+        return {k: _blank(v) for k, v in node.items()}
+    if isinstance(node, list):
+        if node and isinstance(node[0], dict):
+            return [_blank(node[0])]
+        return []
+    return ""
+
+
+def blank_skeleton():
+    """Deep copy of data/template.json with every scalar leaf blanked to ''."""
+    global _blanked_template
+    if _blanked_template is None:
+        template = json.loads(TEMPLATE_FILE.read_text(encoding="utf-8"))
+        _blanked_template = _blank(template)
+    return copy.deepcopy(_blanked_template)
 
 
 def _fixed_specs():
@@ -192,27 +214,31 @@ def _decode(spec, flat):
 
 
 def assemble(flat):
-    root = {}
+    root = blank_skeleton()
+    data_root = root["data"]
+    group_templates = {k: copy.deepcopy(v[0]) for k, v in data_root.items() if isinstance(v, list) and v and isinstance(v[0], dict)}
     for path, val in flat.items():
         if val == "NOT_FOUND":
             continue
-        _set_path(root, path, val)
-    return _finalize_fixed(root)
+        _set_path(data_root, path, val, group_templates)
+    _finalize_fixed(data_root)
+    return root
 
 
-def _finalize_fixed(root):
+def _finalize_fixed(data_root):
     for g in FIXED_GROUPS:
-        arr = root.get(g)
+        arr = data_root.get(g)
         if isinstance(arr, list):
             for e in arr:
                 e["answer"] = e.get("answer", "")
                 e["isAnswer"] = e["answer"] == "Yes"
                 if g == "medical_lifestyle_questions":
                     e["description"] = e.get("description", "")
-    return root
+    return data_root
 
 
-def _set_path(root, path, val):
+def _set_path(root, path, val, group_templates=None):
+    group_templates = group_templates or {}
     tokens = path.split(".")
     cur = root
     for i, tok in enumerate(tokens):
@@ -227,8 +253,9 @@ def _set_path(root, path, val):
         else:
             idx = int(idx)
             arr = cur.setdefault(key, [])
+            blank_item = group_templates.get(key)
             while len(arr) <= idx:
-                arr.append({})
+                arr.append(copy.deepcopy(blank_item) if blank_item is not None else {})
             if last:
                 arr[idx] = val
             else:

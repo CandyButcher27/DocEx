@@ -11,10 +11,16 @@ from field_extractor import extract
 sys.stdout.reconfigure(encoding="utf-8")
 pdf = sys.argv[1]
 
-t0 = time.time()
-ocr = run_ocr_on_pdf(pdf)
+cache = os.path.splitext(os.path.basename(pdf))[0] + ".ocrcache.json"
+if os.path.exists(cache):
+    ocr = json.load(open(cache, encoding="utf-8"))
+    print(f"OCR: {len(ocr)} lines (cached)")
+else:
+    t0 = time.time()
+    ocr = run_ocr_on_pdf(pdf)
+    json.dump(ocr, open(cache, "w", encoding="utf-8"))
+    print(f"OCR: {len(ocr)} lines, {time.time() - t0:.1f}s (cached to {cache})")
 t1 = time.time()
-print(f"OCR: {len(ocr)} lines, {t1 - t0:.1f}s")
 
 result = extract(ocr, pdf_path=pdf)
 t2 = time.time()

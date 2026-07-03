@@ -10,7 +10,7 @@ from PIL import Image
 
 from ocr_engine import UPLOADS, run_ocr_on_pdf
 from llm_client import run_extraction
-from field_extractor import extract as extract_template
+from field_extractor import extract as extract_template, blank_skeleton
 import ingest_gate
 import build_template_store
 
@@ -134,6 +134,9 @@ class Handler(BaseHTTPRequestHandler):
             return
         if parsed.path == "/templates":
             self._send_json({"templates": current_templates()})
+            return
+        if parsed.path == "/skeleton":
+            self._send_json(blank_skeleton())
             return
         self.send_error(404)
 

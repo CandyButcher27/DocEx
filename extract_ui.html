@@ -156,6 +156,7 @@ tplInput.addEventListener('change', async () => {
 });
 
 loadTemplates();
+loadSkeleton();
 
 function setStatus(m) { status.textContent = m; }
 function setStep(id, s) { const e = document.getElementById(id); e.classList.remove('active','done'); if (s) e.classList.add(s); }
@@ -175,13 +176,23 @@ pdfInput.addEventListener('change', async () => {
   updateExtractBtn();
 });
 
-// mirror of python _set_path: build nested template.json from flat {path:value}
+let SKELETON = null;
+async function loadSkeleton() {
+  SKELETON = await (await fetch('/skeleton')).json();
+}
+
+// mirror of python assemble/_set_path: overlay flat {path:value} onto the blanked skeleton
 function assemble(flat) {
-  const root = {};
+  const root = JSON.parse(JSON.stringify(SKELETON));
+  const dataRoot = root.data;
+  const groupTemplates = {};
+  for (const [k, v] of Object.entries(dataRoot)) {
+    if (Array.isArray(v) && v.length && typeof v[0] === 'object') groupTemplates[k] = v[0];
+  }
   for (const [path, val] of Object.entries(flat)) {
     if (val === '' || val === 'NOT_FOUND') continue;
     const tokens = path.split('.');
-    let cur = root;
+    let cur = dataRoot;
     tokens.forEach((tok, i) => {
       const m = tok.match(/^([^\[]+)(?:\[(\d+)\])?$/);
       const key = m[1], idx = m[2];
@@ -192,13 +203,14 @@ function assemble(flat) {
       } else {
         const n = parseInt(idx);
         const arr = (cur[key] = cur[key] || []);
-        while (arr.length <= n) arr.push({});
+        const blankItem = groupTemplates[key];
+        while (arr.length <= n) arr.push(blankItem ? JSON.parse(JSON.stringify(blankItem)) : {});
         if (last) arr[n] = val; else cur = arr[n];
       }
     });
   }
   ['medical_lifestyle_questions', 'declaration'].forEach(g => {
-    if (Array.isArray(root[g])) root[g].forEach(e => {
+    if (Array.isArray(dataRoot[g])) dataRoot[g].forEach(e => {
       e.answer = e.answer || '';
       e.isAnswer = e.answer === 'Yes';
       if (g === 'medical_lifestyle_questions') e.description = e.description || '';
