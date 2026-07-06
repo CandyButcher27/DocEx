@@ -358,6 +358,7 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
             metas.append((apath, {"path": apath, "label": _trunc(item["text"], 90), "section": fx["section"], "coded": False, "answer_field": True, "options": YESNO_OPTIONS}))
 
     anchor_paths = set()
+    notes = {}
     if pdf_path:
         missing = [
             {"path": p, "label": f["label"]}
@@ -374,6 +375,23 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
         for p, val in recovered.items():
             flat_human[p] = val
             anchor_paths.add(p)
+
+        # nominee_details prints as a header row + one x-aligned data row per nominee (a table,
+        # not label:value lines), so it needs its own column-position recovery instead of the
+        # row-based anchor heuristic above (which excludes all repeat_group fields).
+        nominee_missing = [
+            {"path": p, "label": f["label"]}
+            for p, f in metas
+            if f.get("repeat_group") == "nominee_details" and not f["coded"] and not f.get("readonly")
+            and not f.get("answer_field") and "options" not in f
+            and flat_human[p] == "NOT_FOUND"
+        ]
+        if nominee_missing:
+            from nominee_table import extract_nominee_table
+            for p, val in extract_nominee_table(nominee_missing, ocr_entries, pdf_path).items():
+                flat_human[p] = val
+                anchor_paths.add(p)
+                notes[p] = "recovered via table-column anchor — verify"
 
     omr_paths = set()
     if pdf_path:
@@ -402,7 +420,6 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
             flat_human[p] = ans
             omr_paths.add(p)
 
-    notes = {}
     coded_by_path = {p: f["coded"] for p, f in metas}
     # Guard A — drop suspect-section values that merely echo another section (pass-1 hallucination)
     source_values = {
