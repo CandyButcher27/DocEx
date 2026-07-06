@@ -76,6 +76,11 @@ SUSPECT_SECTIONS = ("proposer_details", "mph_section")
 NAME_GATED_SECTIONS = ("proposer_details",)
 MAX_INSTANCES = 10
 YESNO_OPTIONS = [{"text": "Yes", "value": "Yes"}, {"text": "No", "value": "No"}]
+# Paths that are the SAME physical form field as another path (per mapping_report.docx).
+# Ask the LLM once for the source and mirror it, instead of asking twice — two independent
+# asks for one printed field let the model drift (echoing a neighboring blank field's label
+# into one of the two instead of NOT_FOUND).
+MIRROR_FIELDS = {"premium": "payment_details.premium_paid"}
 
 
 def _leaf(path):
@@ -169,7 +174,11 @@ _BATCH_HEADER = (
 def _run_batches(spec, pages, batch_size=15):
     user = {"pages": pages}
     parsed = {}
-    singles = [f for f in spec["fields"] if f["repeat_group"] not in VARIABLE_GROUPS + FIXED_GROUPS + SKIP_GROUPS]
+    singles = [
+        f for f in spec["fields"]
+        if f["repeat_group"] not in VARIABLE_GROUPS + FIXED_GROUPS + SKIP_GROUPS
+        and f["path"] not in MIRROR_FIELDS
+    ]
     for chunk in _chunks(singles, batch_size):
         lines = [_BATCH_HEADER, "", "For coded fields choose exactly one listed allowed value (the human text, not a code).", "", "Fields (JSON keys):"]
         for f in chunk:
@@ -356,6 +365,7 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
             if not f.get("repeat_group") and not f["coded"] and not f.get("readonly")
             and not f.get("answer_field") and "options" not in f
             and not p.startswith(SUSPECT_SECTIONS)
+            and p not in MIRROR_FIELDS
             and flat_human[p] == "NOT_FOUND"
         ]
         from anchor_fill import anchor_fill
@@ -376,6 +386,20 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
         from checkbox_omr import detect
         for p, text in detect(coded_missing, ocr_entries, pdf_path).items():
             flat_human[p] = text
+            omr_paths.add(p)
+
+        # Yes/No tick-matrix OMR — scoped to medical_lifestyle_questions only: that section prints
+        # a single "Yes  No" column header once above the numbered questions (verified on a real
+        # scan). declaration[] entries don't show that same header signal, so leave them NOT_FOUND
+        # rather than guess a column pairing that might not exist for them.
+        tick_missing = [
+            {"path": p, "label": f["label"]}
+            for p, f in metas
+            if f.get("answer_field") and p.startswith("medical_lifestyle_questions[") and flat_human[p] == "NOT_FOUND"
+        ]
+        from checkbox_omr import detect_ticks
+        for p, ans in detect_ticks(tick_missing, ocr_entries, pdf_path).items():
+            flat_human[p] = ans
             omr_paths.add(p)
 
     notes = {}
@@ -407,12 +431,25 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
         for p, f in metas
         if not f.get("repeat_group") and not f["coded"] and not f.get("readonly")
         and not f.get("answer_field") and "options" not in f
+        and p not in MIRROR_FIELDS
         and flat_human[p] == "NOT_FOUND"
     ]
     if pdf_path and text_missing:
         from anchor_fill import classify_missing
         state_override = classify_missing(text_missing, ocr_entries, pdf_path)
 
+    # Mirror duplicate-target fields from their source now that the source has gone through
+    # anchor/OMR recovery — single ask, single value, no independent LLM drift between the two.
+    for dest, source in MIRROR_FIELDS.items():
+        flat_human[dest] = flat_human.get(source, "NOT_FOUND")
+        if flat_human[dest] == "NOT_FOUND":
+            state_override[dest] = state_override.get(source, "no_output")
+        if source in anchor_paths:
+            anchor_paths.add(dest)
+        if source in notes:
+            notes.setdefault(dest, notes[source])
+
+    invalid_paths = set()
     for p, f in metas:
         if f["coded"] or flat_human[p] == "NOT_FOUND":
             continue
@@ -420,8 +457,10 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
         if ok:
             flat_human[p] = norm
         else:
-            flat_human[p] = "NOT_FOUND"
+            # keep the raw extracted value — don't discard real OCR output over a business-rule
+            # mismatch (e.g. one OCR-misread PAN char); flag it so the reviewer can eyeball it.
             notes[p] = f"failed {label} check"
+            invalid_paths.add(p)
 
     decoded = _decode(spec, flat_human)
 
@@ -454,6 +493,7 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
             "value": decoded[p] if found else "",
             "confidence": conf,
             "low": low,
+            "invalid": p in invalid_paths,
             "note": note,
         }
         if f.get("readonly"):

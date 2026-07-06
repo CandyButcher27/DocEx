@@ -36,10 +36,12 @@
   tr.low td.val input, tr.low td.val select { background: #43400f; border-color: #d8c65a; color: #fff5c2; }
   tr.noout td.val input { border-style: dashed; color: var(--muted); }
   tr.blankrow td.val input { border-color: #232838; color: var(--muted); opacity: 0.6; }
+  tr.invalid td.val input, tr.invalid td.val select { background: #3a1418; border-color: #e05c5c; color: #ffd2d2; }
   .conf.blank { color: #6b7180; }
   .conf { font-size: 12px; color: var(--muted); white-space: nowrap; }
   .conf.low { color: #e6c04f; font-weight: 700; }
   .conf.noout { color: #e05c5c; }
+  .conf.invalid { color: #ff6b6b; font-weight: 700; }
   #jsonBox { width: 100%; height: 320px; margin-top: 10px; background: #0b0d13; color: #cfe3ff; border: 1px solid #2a2f3d; border-radius: 8px; padding: 12px; font-family: Consolas, monospace; font-size: 12px; white-space: pre; overflow: auto; }
   .legend { font-size: 12px; color: var(--muted); margin-top: 8px; }
   .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; vertical-align: middle; margin: 0 4px 0 12px; }
@@ -84,6 +86,7 @@
     Reviewer: edit any cell — JSON updates live.
     <span class="swatch" style="background:#43400f;"></span>confidence &lt; 95% (verify against document)
     <span class="swatch" style="background:transparent;border:1px dashed #8a8fa3;"></span>NO OUTPUT
+    <span class="swatch" style="background:#3a1418;border:1px solid #e05c5c;"></span>failed business-rule check (value kept — verify/fix)
   </div>
 </div>
 
@@ -184,15 +187,14 @@ async function loadSkeleton() {
 // mirror of python assemble/_set_path: overlay flat {path:value} onto the blanked skeleton
 function assemble(flat) {
   const root = JSON.parse(JSON.stringify(SKELETON));
-  const dataRoot = root.data;
   const groupTemplates = {};
-  for (const [k, v] of Object.entries(dataRoot)) {
+  for (const [k, v] of Object.entries(root)) {
     if (Array.isArray(v) && v.length && typeof v[0] === 'object') groupTemplates[k] = v[0];
   }
   for (const [path, val] of Object.entries(flat)) {
     if (val === '' || val === 'NOT_FOUND') continue;
     const tokens = path.split('.');
-    let cur = dataRoot;
+    let cur = root;
     tokens.forEach((tok, i) => {
       const m = tok.match(/^([^\[]+)(?:\[(\d+)\])?$/);
       const key = m[1], idx = m[2];
@@ -210,7 +212,7 @@ function assemble(flat) {
     });
   }
   ['medical_lifestyle_questions', 'declaration'].forEach(g => {
-    if (Array.isArray(dataRoot[g])) dataRoot[g].forEach(e => {
+    if (Array.isArray(root[g])) root[g].forEach(e => {
       e.answer = e.answer || '';
       e.isAnswer = e.answer === 'Yes';
       if (g === 'medical_lifestyle_questions') e.description = e.description || '';
@@ -252,7 +254,8 @@ function renderTable() {
       resultsBody.appendChild(ir);
     }
     const tr = document.createElement('tr');
-    if (f.low) tr.className = 'low';
+    if (f.invalid) tr.className = 'invalid';
+    else if (f.low) tr.className = 'low';
     else if (f.state === 'no_output') tr.className = 'noout';
     else if (f.state === 'blank') tr.className = 'blankrow';
 
@@ -288,18 +291,19 @@ function renderTable() {
     }
     input.addEventListener('input', () => {
       f.value = input.value;
-      tr.classList.remove('low', 'noout', 'blankrow');
+      tr.classList.remove('low', 'noout', 'blankrow', 'invalid');
       refreshJson();
     });
     input.addEventListener('change', () => {
       f.value = input.value;
-      tr.classList.remove('low', 'noout', 'blankrow');
+      tr.classList.remove('low', 'noout', 'blankrow', 'invalid');
       refreshJson();
     });
     tdV.appendChild(input);
 
     const tdC = document.createElement('td');
-    if (f.state === 'blank') tdC.innerHTML = '<span class="conf blank">BLANK</span>';
+    if (f.invalid) tdC.innerHTML = `<span class="conf invalid">${f.note || 'business rule failed'}</span>`;
+    else if (f.state === 'blank') tdC.innerHTML = '<span class="conf blank">BLANK</span>';
     else if (f.state === 'no_output') tdC.innerHTML = `<span class="conf noout">${f.note ? f.note : 'NO OUTPUT'}</span>`;
     else if (f.confidence === null) tdC.innerHTML = '<span class="conf low">unverified</span>';
     else {
