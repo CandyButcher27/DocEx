@@ -45,3 +45,7 @@ tools/crop_test.py
 
 # Source schema workbook (internal)
 *.xlsx
+
+# Confidential lender form submissions / generated output with possible PII
+New forms/
+output_v1.zip

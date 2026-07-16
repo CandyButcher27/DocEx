@@ -50,14 +50,24 @@ def blank_skeleton():
     return copy.deepcopy(_blanked_template)
 
 
-def _fixed_specs():
+def _fixed_specs(include_medical=True):
     m = load_mapper()
-    med = [{"code": o["id"], "text": o["text"]} for o in m["medicalQuestionOptions"] if o["id"].startswith("1000")]
     dec = [{"code": o["code"], "text": o["text"]} for o in m["declaration"]]
-    return {
-        "medical_lifestyle_questions": {"section": "Medical Questions", "answer_key": "medical_answers", "items": med, "description": True},
-        "declaration": {"section": "Declaration", "answer_key": "declaration_answers", "items": dec, "description": False},
-    }
+    specs = {}
+    if include_medical:
+        med = [{"code": o["id"], "text": o["text"]} for o in m["medicalQuestionOptions"] if o["id"].startswith("1000")]
+        specs["medical_lifestyle_questions"] = {"section": "Medical Questions", "answer_key": "medical_answers", "items": med, "description": True}
+    specs["declaration"] = {"section": "Declaration", "answer_key": "declaration_answers", "items": dec, "description": False}
+    return specs
+
+
+def include_medical_for(doc_type):
+    """DOGH templates print no medical questions at all (0/9 matched in every DOGH docx studied,
+    vs 7/9 in every LFQ docx) — a genuine content difference, not an inferred one. DOGH/LFQ
+    cosine separation (~0.87-0.89) is well clear of same-type product-pair near-duplicates
+    (Premier/Secure, 0.94-0.996), so trust an explicit "DOGH" match; anything else (unmatched,
+    LFQ, or no doc_type at all) keeps the safe full-schema default."""
+    return not (doc_type and "DOGH" in doc_type)
 
 
 def _norm(s):
@@ -136,7 +146,7 @@ def build_prompt(spec):
         for leaf, f in leaves:
             lines.append(f'  - {leaf} : {f["label"]}{_allowed(f)}')
         lines.append("")
-    for g, fx in _fixed_specs().items():
+    for g, fx in _fixed_specs(include_medical=True).items():
         lines.append(f'{fx["section"]} — JSON key "{fx["answer_key"]}" = object mapping each code below to "Yes", "No", or "NOT_FOUND" (the applicant\'s answer/tick in the document):')
         for item in fx["items"]:
             lines.append(f'  - {item["code"]} : {_trunc(item["text"], 90)}')
@@ -171,7 +181,8 @@ _BATCH_HEADER = (
 )
 
 
-def _run_batches(spec, pages, batch_size=15):
+def _run_batches(spec, pages, batch_size=15, fixed_specs=None):
+    fixed_specs = _fixed_specs() if fixed_specs is None else fixed_specs
     user = {"pages": pages}
     parsed = {}
     singles = [
@@ -194,7 +205,7 @@ def _run_batches(spec, pages, batch_size=15):
             lines.append(f'- {leaf} : {f["label"]}{_allowed(f)}')
         obj = _parse_obj(run_extraction(user, "\n".join(lines)))
         parsed[g] = obj.get(g, [])
-    for g, fx in _fixed_specs().items():
+    for g, fx in fixed_specs.items():
         lines = [
             _BATCH_HEADER, "",
             f'For each question code below, return the applicant\'s ticked answer. Return ONLY {{"{fx["answer_key"]}": {{code: "Yes"|"No"|"NOT_FOUND"}}}}.',
@@ -317,10 +328,11 @@ def _confidence(value_human, ocr_entries):
     return best
 
 
-def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
+def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None, doc_type=None):
     spec = spec or load_spec()
     groups = _group_templates(spec)
-    parsed = _run_batches(spec, reading_order(ocr_entries))
+    fixed_specs = _fixed_specs(include_medical=include_medical_for(doc_type))
+    parsed = _run_batches(spec, reading_order(ocr_entries), fixed_specs=fixed_specs)
 
     skip = VARIABLE_GROUPS + FIXED_GROUPS + SKIP_GROUPS
     metas = []
@@ -342,7 +354,7 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
                 p = f"{g}[{i}].{leaf}"
                 flat_human[p] = str(inst.get(leaf, "NOT_FOUND"))
                 metas.append((p, f))
-    for g, fx in _fixed_specs().items():
+    for g, fx in fixed_specs.items():
         ans_map = parsed.get(fx["answer_key"])
         if not isinstance(ans_map, dict):
             ans_map = {}
@@ -359,6 +371,7 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
 
     anchor_paths = set()
     notes = {}
+    state_override = {}
     if pdf_path:
         missing = [
             {"path": p, "label": f["label"]}
@@ -387,11 +400,30 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
             and flat_human[p] == "NOT_FOUND"
         ]
         if nominee_missing:
-            from nominee_table import extract_nominee_table
+            from nominee_table import extract_nominee_table, classify_nominee_missing
             for p, val in extract_nominee_table(nominee_missing, ocr_entries, pdf_path).items():
                 flat_human[p] = val
                 anchor_paths.add(p)
                 notes[p] = "recovered via table-column anchor — verify"
+            for p, st in classify_nominee_missing(nominee_missing, ocr_entries, pdf_path).items():
+                if flat_human[p] == "NOT_FOUND":
+                    state_override[p] = st
+
+        # address_details prints as a composite "Communication/Permanent Address" label
+        # (not literal "Address Line 1/2/3" labels), so it needs its own line-splitting
+        # recovery instead of the label:value anchor heuristic above.
+        address_missing = {
+            p for p, f in metas
+            if f.get("repeat_group") == "address_details" and p.endswith((".address_line_1", ".address_line_2", ".address_line_3"))
+            and flat_human[p] == "NOT_FOUND"
+        }
+        if address_missing:
+            from address_recovery import extract_address_lines
+            for p, val in extract_address_lines(ocr_entries).items():
+                if p in address_missing:
+                    flat_human[p] = val
+                    anchor_paths.add(p)
+                    notes[p] = "recovered via address-line split — verify"
 
     omr_paths = set()
     if pdf_path:
@@ -410,8 +442,9 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
         # a single "Yes  No" column header once above the numbered questions (verified on a real
         # scan). declaration[] entries don't show that same header signal, so leave them NOT_FOUND
         # rather than guess a column pairing that might not exist for them.
+        med_items = fixed_specs.get("medical_lifestyle_questions", {}).get("items", [])
         tick_missing = [
-            {"path": p, "label": f["label"]}
+            {"path": p, "label": med_items[int(re.search(r"\[(\d+)\]", p).group(1))]["text"]}
             for p, f in metas
             if f.get("answer_field") and p.startswith("medical_lifestyle_questions[") and flat_human[p] == "NOT_FOUND"
         ]
@@ -442,7 +475,6 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
                     notes.setdefault(p, "dropped — section has no name")
 
     # Part C — classify remaining missing singleton text fields: blank (empty on form) vs no_output (has ink)
-    state_override = {}
     text_missing = [
         {"path": p, "label": f["label"]}
         for p, f in metas
@@ -453,7 +485,7 @@ def extract(ocr_entries, spec=None, threshold=0.95, pdf_path=None):
     ]
     if pdf_path and text_missing:
         from anchor_fill import classify_missing
-        state_override = classify_missing(text_missing, ocr_entries, pdf_path)
+        state_override.update(classify_missing(text_missing, ocr_entries, pdf_path))
 
     # Mirror duplicate-target fields from their source now that the source has gone through
     # anchor/OMR recovery — single ask, single value, no independent LLM drift between the two.

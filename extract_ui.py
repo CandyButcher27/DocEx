@@ -4,15 +4,16 @@ import re
 import uuid
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from io import BytesIO
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
 
 from PIL import Image
 
-from ocr_engine import UPLOADS, run_ocr_on_pdf
+from ocr_engine import UPLOADS, run_ocr_on_pdf, render_pages
 from llm_client import run_extraction
 from field_extractor import extract as extract_template, blank_skeleton
 import ingest_gate
 import build_template_store
+import doc_type_registry
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 HTML_FILE = os.path.join(ROOT, "extract_ui.html")
@@ -138,6 +139,27 @@ class Handler(BaseHTTPRequestHandler):
         if parsed.path == "/skeleton":
             self._send_json(blank_skeleton())
             return
+        if parsed.path == "/page_image":
+            qs = parse_qs(parsed.query)
+            doc_id = qs.get("doc_id", [None])[0]
+            page = int(qs.get("page", ["0"])[0])
+            doc = DOCS.get(doc_id)
+            if not doc:
+                self.send_error(404)
+                return
+            pages = render_pages(doc["pdf_path"])
+            if page < 0 or page >= len(pages):
+                self.send_error(404)
+                return
+            out = BytesIO()
+            pages[page].save(out, format="PNG")
+            body = out.getvalue()
+            self.send_response(200)
+            self.send_header("Content-Type", "image/png")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
         self.send_error(404)
 
     def do_POST(self):
@@ -193,7 +215,8 @@ class Handler(BaseHTTPRequestHandler):
                 return
             entries = run_ocr_on_pdf(doc["pdf_path"])
             doc["ocr"] = entries
-            self._send_json({"lines": len(entries)})
+            pages = (max(e["page"] for e in entries) + 1) if entries else len(render_pages(doc["pdf_path"]))
+            self._send_json({"lines": len(entries), "pages": pages})
             return
 
         if parsed.path == "/run_llm":
@@ -221,7 +244,10 @@ class Handler(BaseHTTPRequestHandler):
             if not gate["ok"]:
                 self._send_json({"rejected": True, "reason": gate["reason"]})
                 return
-            result = extract_template(doc["ocr"], pdf_path=doc["pdf_path"])
+            doc_type = gate["detail"]["match"]["doc_kind"]
+            config = doc_type_registry.resolve(doc_type)
+            spec = config["spec"] if config else None
+            result = extract_template(doc["ocr"], spec=spec, pdf_path=doc["pdf_path"], doc_type=doc_type)
             ok, mand = ingest_gate.check_mandatory(result["fields"])
             if not ok:
                 self._send_json({"rejected": True, "reason": "required field(s) missing: " + ", ".join(mand["missing"])})

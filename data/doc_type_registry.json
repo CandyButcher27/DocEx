@@ -1,0 +1,7 @@
+{
+  "GCL Secure_LFQ": {
+    "field_spec_path": "data/field_spec.json",
+    "code_mapper_path": "data/code_mapper.json",
+    "include_medical": true
+  }
+}

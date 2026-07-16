@@ -149,22 +149,110 @@ def detect(coded_fields, ocr_entries, pdf_path):
     return out
 
 
+# Common connector words dropped before question-row token matching — without this, a short
+# question full of generic words ("Do you currently or have you ever used any...") can
+# false-match an unrelated row that happens to share only those connectors, not real content.
+_STOPWORDS = {
+    "a", "an", "the", "do", "you", "your", "is", "are", "was", "were", "have", "has", "had",
+    "or", "and", "any", "all", "of", "in", "on", "to", "for", "with", "if", "please", "this",
+    "that", "such", "as", "not", "than", "other", "including", "at", "by", "from", "be", "been",
+}
+
+
+def _content_tokens(text):
+    return set(t for t in _tokens(text) if t not in _STOPWORDS)
+
+
 def _find_question_row(question_text, ocr_entries):
     """Find the OCR entry that best matches this question's text — unlike _find_option, this
     target may itself be a long paragraph-length OCR line, so no short-label cap here."""
-    qt = _tokens(question_text)[:12]
+    qt = _content_tokens(question_text)
     if not qt:
         return None
-    qt = set(qt)
     best, best_score = None, 0.5
     for e in ocr_entries:
-        et = set(_tokens(e["text"]))
+        et = _content_tokens(e["text"])
         if not et:
             continue
         score = len(qt & et) / len(qt)
         if score > best_score:
             best, best_score = e, score
     return best
+
+
+WINDOW_ROWS = 6        # a wrapped question paragraph rarely spans more physical print lines than this
+WINDOW_MATCH = 0.5      # min fraction of the question's own tokens that must appear in the window
+
+
+def _merge_rows(ocr_entries):
+    """Reconstruct visual rows (same clustering as field_extractor.reading_order) but keep each
+    row's own bbox/page, so a multi-line question paragraph can be matched across several rows —
+    a single OCR entry/row rarely carries enough of a 60-100 word question's tokens on its own."""
+    by_page = {}
+    for e in ocr_entries:
+        by_page.setdefault(e.get("page", 0), []).append(e)
+    rows = []
+    for p in sorted(by_page):
+        toks = by_page[p]
+        heights = [e["bbox"][3] - e["bbox"][1] for e in toks if e["bbox"][3] > e["bbox"][1]]
+        tol = (statistics.median(heights) * 0.6) if heights else 10
+        toks.sort(key=lambda e: (e["bbox"][1] + e["bbox"][3]) / 2)
+        cur, cur_y = [], None
+        for e in toks:
+            yc = (e["bbox"][1] + e["bbox"][3]) / 2
+            if cur_y is None or abs(yc - cur_y) <= tol:
+                cur.append(e)
+                cur_y = sum((t["bbox"][1] + t["bbox"][3]) / 2 for t in cur) / len(cur)
+            else:
+                rows.append(cur)
+                cur, cur_y = [e], yc
+        if cur:
+            rows.append(cur)
+    merged = []
+    for r in rows:
+        r.sort(key=lambda e: e["bbox"][0])
+        text = " ".join(t["text"] for t in r if t["text"].strip())
+        if not text:
+            continue
+        x0 = min(e["bbox"][0] for e in r)
+        y0 = min(e["bbox"][1] for e in r)
+        x1 = max(e["bbox"][2] for e in r)
+        y1 = max(e["bbox"][3] for e in r)
+        merged.append({"page": r[0].get("page", 0), "bbox": (x0, y0, x1, y1), "text": text})
+    return merged
+
+
+def _find_question_window(question_text, merged_rows):
+    """Slide a window of consecutive rows (within one page) and score by token overlap against
+    the full question text — handles paragraph questions that wrap across several printed lines,
+    where no single row/entry carries enough tokens to match on its own. Purely content-based
+    (never trusts printed numbering/position), so it's immune to marker misalignment on forms
+    where a non-question line (e.g. height/weight) consumes the "1)" marker slot."""
+    qt = _content_tokens(question_text)
+    if not qt:
+        return None
+    by_page = {}
+    for i, r in enumerate(merged_rows):
+        by_page.setdefault(r["page"], []).append(i)
+    best_row, best_score = None, WINDOW_MATCH
+    for page, idxs in by_page.items():
+        for start in range(len(idxs)):
+            window_tokens = set()
+            first_hit = None
+            for k in range(start, min(start + WINDOW_ROWS, len(idxs))):
+                row_tokens = _content_tokens(merged_rows[idxs[k]]["text"])
+                if first_hit is None and (qt & row_tokens):
+                    first_hit = idxs[k]  # anchor at the row where the question's own text actually
+                    # starts, not the window's start — a window can lead with unrelated rows
+                    # (e.g. a column header) that happen to fall inside the token-count net.
+                window_tokens |= row_tokens
+            if not window_tokens or first_hit is None:
+                continue
+            score = len(qt & window_tokens) / len(qt)
+            if score > best_score:
+                best_score = score
+                best_row = merged_rows[first_hit]
+    return best_row
 
 
 def _find_columns(ocr_entries, page, max_y):
@@ -176,6 +264,48 @@ def _find_columns(ocr_entries, page, max_y):
     return max(yes, key=lambda e: e["bbox"][1]), max(no, key=lambda e: e["bbox"][1])
 
 
+def _find_vlines(page_img, y0, y1, x0, x1, thresh=0.5):
+    """Vertical table-grid-line x-positions in [x0,x1) — columns where most pixels are dark
+    across the full row height y0..y1. Used to find a tick cell's true left/right border,
+    since the header word's own bbox (e.g. "No") is much narrower than its table column."""
+    gray = page_img.convert("L")
+    dark_xs = []
+    for x in range(int(x0), int(x1)):
+        px = list(gray.crop((x, y0, x + 1, y1)).getdata())
+        if px and sum(1 for p in px if p < INK_THRESH) / len(px) > thresh:
+            dark_xs.append(x)
+    merged, run = [], []
+    for x in dark_xs:
+        if run and x - run[-1] > 2:
+            merged.append(sum(run) // len(run))
+            run = []
+        run.append(x)
+    if run:
+        merged.append(sum(run) // len(run))
+    return merged
+
+
+def _tick_ink(page_img, row_y0, row_y1, ye_bbox, ne_bbox):
+    """Yes/No ink ratios for a tick row: prefer the actual table-grid-line boundaries (a header
+    word's bbox is far narrower than its column, so measuring ink only beside the word itself
+    misses ticks placed elsewhere in the cell and can pick up ink bleeding in from a neighboring
+    column instead). Falls back to the old beside-the-label measurement if no grid found (e.g.
+    a borderless form)."""
+    search_x0, search_x1 = ye_bbox[0] - 30, ne_bbox[2] + 30
+    lines = _find_vlines(page_img, row_y0, row_y1, search_x0, search_x1)
+    left = max((x for x in lines if x <= ye_bbox[0]), default=None)
+    mid = min((x for x in lines if ye_bbox[2] <= x <= ne_bbox[0]), default=None)
+    right = min((x for x in lines if x >= ne_bbox[2]), default=None)
+    if left is not None and mid is not None and right is not None:
+        gray = page_img.convert("L")
+        yes_ink = _ink_ratio(gray.crop((left, row_y0, mid, row_y1)))
+        no_ink = _ink_ratio(gray.crop((mid, row_y0, right, row_y1)))
+        return yes_ink, no_ink
+    yes_bbox = (ye_bbox[0], row_y0, ye_bbox[2], row_y1)
+    no_bbox = (ne_bbox[0], row_y0, ne_bbox[2], row_y1)
+    return _box_ink(page_img, yes_bbox), _box_ink(page_img, no_bbox)
+
+
 def detect_ticks(items, ocr_entries, pdf_path):
     """items: [{path, label}] — one per Yes/No question in a column-header matrix (the header's
     'Yes'/'No' printed once, then each question row has a blank tickbox under each column).
@@ -183,9 +313,10 @@ def detect_ticks(items, ocr_entries, pdf_path):
     if not items:
         return {}
     pages = render_pages(pdf_path)
+    merged_rows = _merge_rows(ocr_entries)
     out = {}
     for it in items:
-        row = _find_question_row(it["label"], ocr_entries)
+        row = _find_question_row(it["label"], ocr_entries) or _find_question_window(it["label"], merged_rows)
         if row is None:
             continue
         page = row.get("page", 0)
@@ -199,10 +330,7 @@ def detect_ticks(items, ocr_entries, pdf_path):
         # x-columns come from the header's own "Yes"/"No" position; y-range is THIS question's
         # own row (not the header's) — each row's tickbox sits under the header, at its own height.
         row_y0, row_y1 = row["bbox"][1], row["bbox"][3]
-        yes_bbox = (ye["bbox"][0], row_y0, ye["bbox"][2], row_y1)
-        no_bbox = (ne["bbox"][0], row_y0, ne["bbox"][2], row_y1)
-        yes_ink = _box_ink(img, yes_bbox)
-        no_ink = _box_ink(img, no_bbox)
+        yes_ink, no_ink = _tick_ink(img, row_y0, row_y1, ye["bbox"], ne["bbox"])
         if yes_ink < MIN_INK and no_ink < MIN_INK:
             continue
         top, other = (("Yes", yes_ink), ("No", no_ink)) if yes_ink >= no_ink else (("No", no_ink), ("Yes", yes_ink))

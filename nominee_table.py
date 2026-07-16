@@ -1,8 +1,30 @@
 import re
 from statistics import median
 
-from checkbox_omr import _match_score
-from anchor_fill import MAX_VALUE_LEN, MAX_VALUE_TOKENS
+from checkbox_omr import _match_score, _ink_ratio
+from anchor_fill import MAX_VALUE_LEN, MAX_VALUE_TOKENS, BLANK_INK_THRESH, _same_row
+from ocr_engine import render_pages
+
+# appointee_* fields are a label:value block *above* the table ("Appointee Name (if
+# applicable):", "Date of Birth:", "Gender:", "Relationship with Nominee:"), left blank when
+# the nominee isn't a minor. Scoped to the y-window between the previous table and this one's
+# header so it can't collide with the unrelated "Date of Birth:" labels elsewhere on the page
+# (insured/proposer sections repeat that exact phrase).
+APPOINTEE_LABELS = {
+    "name": ["Appointee Name"],
+    "dob": ["Date of Birth"],
+    "gender": ["Gender"],
+    "relationship": ["Relationship with Nominee"],
+}
+APPOINTEE_LEAF_KEY = {
+    "appointee_first_name": "name",
+    "appointee_middle_name": "name",
+    "appointee_last_name": "name",
+    "appointee_dob": "dob",
+    "appointee_gender": "gender",
+    "appointee_relationship_with_nominee": "relationship",
+}
+APPOINTEE_MATCH_SCORE = 0.6
 
 # nominee_details is printed as a table: one header row (column labels) then one x-aligned data
 # row per nominee below it — anchor_fill's row-based "value right of label" heuristic can't match
@@ -254,6 +276,112 @@ def extract_nominee_table(missing, ocr_entries, pdf_path):
                                 out[path] = split_val
                     elif leaf in cell_values:
                         out[path] = cell_values[leaf]
+                resolved_indices.add(idx)
+            floor = header["y1"] + header["row_h"]
+    return out
+
+
+def _classify_appointee(ocr_entries, page, page_img, floor, ceil_y):
+    """Ink-check the appointee label:value block within [floor, ceil_y) on this page only."""
+    w, h = page_img.size
+    window = [e for e in ocr_entries if e.get("page", 0) == page and floor <= e["bbox"][1] < ceil_y]
+    verdicts = {}
+    for key, phrases in APPOINTEE_LABELS.items():
+        anchor, best = None, APPOINTEE_MATCH_SCORE
+        for e in window:
+            for ph in phrases:
+                s = _match_score(ph, e["text"])
+                if s > best:
+                    anchor, best = e, s
+        if anchor is None:
+            verdicts[key] = "blank"   # label itself isn't printed in this window
+            continue
+        x0, y0, x1, y1 = anchor["bbox"]
+        limit = min(w, x1 + 520)
+        for e in window:
+            if e is anchor:
+                continue
+            if _same_row(anchor["bbox"], e["bbox"]) and e["bbox"][0] > x1:
+                limit = min(limit, e["bbox"][0] - 6)
+        cx0, cy0 = x1 + 6, max(0, y0 - 5)
+        cx1, cy1 = limit, min(h, y1 + 5)
+        if cx1 - cx0 < 20 or cy1 - cy0 < 8:
+            verdicts[key] = "blank"
+            continue
+        ink = _ink_ratio(page_img.crop((cx0, cy0, cx1, cy1)).convert("L"))
+        verdicts[key] = "no_output" if ink > BLANK_INK_THRESH else "blank"
+    return verdicts
+
+
+def classify_nominee_missing(missing, ocr_entries, pdf_path):
+    """missing: [{path: 'nominee_details[i].leaf', label}]. Returns {path: 'blank'} for leaves
+    confirmed empty on this doc's table/appointee block (never overrides a genuine no_output —
+    e.g. a cell with ink that just failed to parse stays untouched, for review)."""
+    if not missing:
+        return {}
+
+    by_index = {}
+    for f in missing:
+        m = re.match(r"nominee_details\[(\d+)\]\.(.+)", f["path"])
+        if not m:
+            continue
+        idx, leaf = int(m.group(1)), m.group(2)
+        by_index.setdefault(idx, set()).add(leaf)
+    if not by_index:
+        return {}
+    max_index = max(by_index)
+
+    section_anchor = _find_section_anchor(ocr_entries)
+    y_floor = section_anchor["bbox"][1] if section_anchor else 0
+    pages = sorted({e.get("page", 0) for e in ocr_entries})
+
+    out = {}
+    resolved_indices = set()
+    pages_img = None
+    for page in pages:
+        floor = y_floor if section_anchor and section_anchor.get("page", 0) == page else 0
+        while True:
+            header = _find_header_block(ocr_entries, page, floor)
+            if header is None:
+                break
+            bands = _column_bands(header)
+            data_rows = _find_data_rows(ocr_entries, header, max_index)
+            appointee_verdicts = None
+            for idx, leaves in by_index.items():
+                if idx in resolved_indices or idx not in data_rows:
+                    continue
+                row_y0, row_y1 = data_rows[idx]
+                for leaf in leaves:
+                    path = f"nominee_details[{idx}].{leaf}"
+                    if leaf == "id":
+                        out[path] = "blank"   # system field, never printed on any form
+                        continue
+                    if leaf in APPOINTEE_LEAF_KEY:
+                        if appointee_verdicts is None:
+                            if pages_img is None:
+                                pages_img = render_pages(pdf_path)
+                            appointee_verdicts = _classify_appointee(
+                                ocr_entries, page, pages_img[page], floor, header["y0"]
+                            )
+                        out[path] = appointee_verdicts[APPOINTEE_LEAF_KEY[leaf]]
+                        continue
+                    if leaf not in COL_ALIASES:
+                        out[path] = "blank"   # no column for this leaf on this doc's table
+                        continue
+                    band = bands.get(leaf)
+                    if band is None:
+                        continue   # aliased but not located this pass — ambiguous, leave as-is
+                    if pages_img is None:
+                        pages_img = render_pages(pdf_path)
+                    img = pages_img[page]
+                    bx0, bx1 = band
+                    cx0, cy0 = max(0, bx0), max(0, row_y0)
+                    cx1, cy1 = min(img.width, bx1), min(img.height, row_y1)
+                    if cx1 - cx0 < 5 or cy1 - cy0 < 5:
+                        continue
+                    ink = _ink_ratio(img.crop((cx0, cy0, cx1, cy1)).convert("L"))
+                    if ink <= BLANK_INK_THRESH:
+                        out[path] = "blank"   # column exists, cell has no ink
                 resolved_indices.add(idx)
             floor = header["y1"] + header["row_h"]
     return out
